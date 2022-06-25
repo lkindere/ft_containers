@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 12:37:52 by lkindere          #+#    #+#             */
-/*   Updated: 2022/06/25 16:33:42 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/06/25 17:58:41 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ class vector
 		// // Capacity
 		size_t size() const;
 		size_t max_size() const;
-		// void resize (size_type n, value_type val = value_type());
+		void resize (size_t n, T val);
 		size_t capacity() const;
 		bool empty() const;
 		void reserve (size_t n);
@@ -59,14 +59,14 @@ class vector
 		// const & at (size_type n) const;
 		// & front();
 		// const & front() const;
-		// & back();
-		// const & back() const;
+		T& back();
+		const T& back() const;
 
 		// //Modifiers
 		// template <class InputIterator> void assign (InputIterator first, InputIterator last); ???
 		// void assign (size_type n, const value_type& val);
-		// void push_back (const value_type& val);
-		// void pop_back();
+		void push_back (const T& val);
+		void pop_back();
 		// iterator insert (iterator position, const value_type& val); ???
     	// void insert (iterator position, size_type n, const value_type& val);
 		// template <class InputIterator> void insert (iterator position, InputIterator first, InputIterator last); ???
