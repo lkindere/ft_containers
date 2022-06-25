@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 12:37:52 by lkindere          #+#    #+#             */
-/*   Updated: 2022/06/25 17:58:41 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/06/25 19:29:09 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,12 @@ class vector
 		void reserve (size_t n);
 
 		// // Access
-		// & operator[] (size_type n);
-		// const & operator[] (size_type n) const;
-		// & at (size_type n);
-		// const & at (size_type n) const;
-		// & front();
-		// const & front() const;
+		T& operator[] (size_t n);
+		const T& operator[] (size_t n) const;
+		T& at (size_t n);
+		const T& at (size_t n) const;
+		T& front();
+		const T& front() const;
 		T& back();
 		const T& back() const;
 
@@ -73,9 +73,10 @@ class vector
 		// iterator erase (iterator position); ???
 		// iterator erase (iterator first, iterator last); ???
 		// void swap (vector& x);
-		// void clear();
+		void clear();
 
 		// //Allocator ????
+
 		// //Non member overloads ????
 };
 }

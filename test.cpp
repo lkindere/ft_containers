@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:04:17 by lkindere          #+#    #+#             */
-/*   Updated: 2022/06/25 18:26:46 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/06/25 19:28:58 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,6 +178,98 @@ int	main(void)
 	std::cout << "Empty:    " << ftv.empty() << std::endl;
 	std::cout << "Empty:    " << stv.empty() << "\n\n";
 
-	system("leaks a.out");
+	std::cout << "---------------------------------------------------------------\n";
+	std::cout << "Front\n";
+	std::cout << "---------------------------------------------------------------\n\n";
+
+	for (int i = 0; i < 5; ++i){
+		int	rng = rand();
+		ftv.push_back(rng);
+		stv.push_back(rng);
+		std::cout << ftv.front() << std::endl;
+		std::cout << stv.front() << "\n\n";
+		ftv.pop_back();
+		stv.pop_back();
+	}
+
+	std::cout << "Capacity: " << ftv.capacity() << std::endl;
+	std::cout << "Capacity: " << stv.capacity() << "\n\n";
+
+	std::cout << "Size:     " << ftv.size() << std::endl;
+	std::cout << "Size:     " << stv.size() << "\n\n";
+
+
+	std::cout << "Empty:    " << ftv.empty() << std::endl;
+	std::cout << "Empty:    " << stv.empty() << "\n\n";
+
+	std::cout << "---------------------------------------------------------------\n";
+	std::cout << "Push_back RNG5, display with at(), []\n";
+	std::cout << "---------------------------------------------------------------\n\n";
+
+	for (int i = 0; i < 5; ++i){
+		int	rng = rand();
+		ftv.push_back(rng);
+		stv.push_back(rng);
+		std::cout << ftv.at(i) << std::endl;
+		std::cout << stv.at(i) << "\n\n";
+		std::cout << ftv[i] << std::endl;
+		std::cout << stv[i] << "\n\n";
+	}
+
+	std::cout << "Capacity: " << ftv.capacity() << std::endl;
+	std::cout << "Capacity: " << stv.capacity() << "\n\n";
+
+	std::cout << "Size:     " << ftv.size() << std::endl;
+	std::cout << "Size:     " << stv.size() << "\n\n";
+
+
+	std::cout << "Empty:    " << ftv.empty() << std::endl;
+	std::cout << "Empty:    " << stv.empty() << "\n\n";
+
+	std::cout << "---------------------------------------------------------------\n";
+	std::cout << "Try catch out of range\n";
+	std::cout << "---------------------------------------------------------------\n\n";
+
+	try {ftv.at(5);}
+	catch (std::out_of_range ret) {std::cout << ret.what() << "\n";};
+
+	try {stv.at(5);}
+	catch (std::out_of_range ret) {std::cout << ret.what() << "\n\n";};
+
+	try {ftv.at(-1);}
+	catch (std::out_of_range ret) {std::cout << ret.what() << "\n";};
+
+	try {stv.at(-1);}
+	catch (std::out_of_range ret) {std::cout << ret.what() << "\n\n";};
+
+	std::cout << "---------------------------------------------------------------\n";
+	std::cout << "RNG10 and clear\n";
+	std::cout << "---------------------------------------------------------------\n\n";
+
+	ftv.resize(10, 42);
+	stv.resize(10, 42);
+
+	std::cout << "Capacity: " << ftv.capacity() << std::endl;
+	std::cout << "Capacity: " << stv.capacity() << "\n\n";
+
+	std::cout << "Size:     " << ftv.size() << std::endl;
+	std::cout << "Size:     " << stv.size() << "\n\n";
+
+	std::cout << "Empty:    " << ftv.empty() << std::endl;
+	std::cout << "Empty:    " << stv.empty() << "\n\n";
+
+	ftv.clear();
+	stv.clear();
+
+	std::cout << "Capacity: " << ftv.capacity() << std::endl;
+	std::cout << "Capacity: " << stv.capacity() << "\n\n";
+
+	std::cout << "Size:     " << ftv.size() << std::endl;
+	std::cout << "Size:     " << stv.size() << "\n\n";
+
+	std::cout << "Empty:    " << ftv.empty() << std::endl;
+	std::cout << "Empty:    " << stv.empty() << "\n\n";
+
+	// system("leaks a.out");
 	return (0);
 }

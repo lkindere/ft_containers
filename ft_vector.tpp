@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 14:59:28 by lkindere          #+#    #+#             */
-/*   Updated: 2022/06/25 18:23:00 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/06/25 19:27:45 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 #include <exception>
 #include <iostream>
 
-//Constructors
+//																					CONSTRUCTORS
+
 template <typename T>
 ft::vector<T>::vector() {std::cout << "Constructed or smth\n";};
 
@@ -26,7 +27,8 @@ ft::vector<T>::vector() {std::cout << "Constructed or smth\n";};
 template <typename T>
 ft::vector<T>::~vector() {std::cout << "Deconstructed or smth\n";};
 
-// //Iterators
+//																					ITERATORS
+
 // iterator begin();
 // const_iterator begin() const;
 // iterator end();
@@ -36,7 +38,8 @@ ft::vector<T>::~vector() {std::cout << "Deconstructed or smth\n";};
 // reverse_iterator rend();
 // const_reverse_iterator rend() const;
 
-// // Capacity
+//																					CAPACITY
+
 template <typename T>
 size_t ft::vector<T>::size() const {return size_;};
 
@@ -99,13 +102,35 @@ void ft::vector<T>::reserve (size_t n) {
 	capacity_ = n;
 }
 
-// // Access
-// & operator[] (size_type n);
-// const & operator[] (size_type n) const;
-// & at (size_type n);
-// const & at (size_type n) const;
-// & front();
-// const & front() const;
+//																					ACCESS
+
+//Not bounds protected
+template <typename T>
+T& ft::vector<T>::operator[] (size_t n) {return data_[n];};
+
+//Not bounds protected
+template <typename T>
+const T& ft::vector<T>::operator[] (size_t n) const {return data_[n];};
+
+template <typename T>
+T& ft::vector<T>::at (size_t n){
+	if (n >= size_ || n < 0)
+		throw(std::out_of_range("ft_vector"));
+	return (data_[n]);
+}
+
+template <typename T>
+const T& ft::vector<T>::at (size_t n) const{
+	if (n >= size_ || n < 0)
+		throw(std::out_of_range("ft_vector"));
+	return (data_[n]);
+}
+
+template <typename T>
+T& ft::vector<T>::front() {return *data_;};
+
+template <typename T>
+const T& ft::vector<T>::front() const {return *data_;};
 
 //Empty containers cause undefined behaviour
 template <typename T>
@@ -115,7 +140,8 @@ T& ft::vector<T>::back() {return data_[size_ - 1];};
 template <typename T>
 const T& ft::vector<T>::back() const {return data_[size_ - 1];};
 
-// //Modifiers
+//																					MODIFIERS
+
 // template <class InputIterator> void assign (InputIterator first, InputIterator last); ???
 // void assign (size_type n, const value_type& val);
 
@@ -151,7 +177,12 @@ void ft::vector<T>::pop_back() {
 // iterator erase (iterator position); ???
 // iterator erase (iterator first, iterator last); ???
 // void swap (vector& x);
-// void clear();
+
+template <typename T>
+void ft::vector<T>::clear(){
+	for (;size_ > 0; --size_)
+		alloc_.destroy(&data_[size_ - 1]);
+}
 
 // //Allocator ????
 // //Non member overloads ????
