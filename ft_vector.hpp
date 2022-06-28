@@ -6,13 +6,12 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 12:37:52 by lkindere          #+#    #+#             */
-/*   Updated: 2022/06/27 20:45:25 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/06/28 11:10:57 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include <vector>
 #include <memory>
 
 namespace ft {
@@ -20,12 +19,35 @@ namespace ft {
 template <typename T>
 class VectorIterator
 {
+	public:
+		typedef	T									value_type;
+		typedef	T*									pointer;
+		typedef T&									reference;
+		typedef	ptrdiff_t							difference_type;
+		typedef std::random_access_iterator_tag		iterator_category;
+		
 	private:
-		T*	ptr;
+		pointer		ptr_;
 	
 	public:
-		VectorIterator();
-		~VectorIterator();
+		//																	Constructors
+		VectorIterator(pointer ptr = nullptr) { ptr_ = ptr; }
+		//Copy constructor?
+		~VectorIterator() {}
+		
+		//																	Operators
+		VectorIterator<value_type>&	operator=(pointer ptr) { ptr_ = ptr; return (*this); }
+
+		bool						operator==(const VectorIterator<value_type>& iter) const {
+			return (ptr_ == iter.getConstPtr());
+		}
+
+		bool						operator!=(const VectorIterator<value_type>& iter) const {
+			return (ptr_ != iter.getConstPtr());
+		}
+
+		pointer			getPtr() const { return ptr_; }
+		const pointer	getConstPtr() const { return ptr_; }
 };
 
 template <typename T, typename Alloc = std::allocator<T> >
@@ -39,7 +61,7 @@ class vector
 		typedef typename Alloc::pointer				pointer;
 		typedef typename Alloc::const_pointer		const_pointer;
 		typedef VectorIterator<value_type>			iterator;
-		// typedef typename VectorIterator<const T>	const_iterator;
+		typedef VectorIterator<const value_type>	const_iterator;
 		// typedef typename rev_vector_iterator<T>	reverse_iterator;
 		// typedef typename							const_reverse_iterator;
 		typedef	ptrdiff_t							difference_type;
@@ -50,9 +72,10 @@ class vector
 		size_type				size_;
 		size_type				capacity_;
 		allocator_type			alloc_;
+
 	public:
 		//																		Constructors
-		explicit vector(const allocator_type& alloc = allocator_type()) {};
+		explicit vector(const allocator_type& alloc = allocator_type()) {}
 		// vector (size_type n, const value_type& val = value_type(),
 		// const allocator_type& alloc = allocator_type());
 		// template <class InputIterator> vector (InputIterator first, InputIterator last,
@@ -63,19 +86,24 @@ class vector
 		//																		Iterators
 
 		// //Iterators
-		// iterator begin();
-		// const_iterator begin() const;
-		// iterator end();
-		// const_iterator end() const;
+		iterator begin() { return iterator(data_); }
+
+	
+		const_iterator begin() const { return const_iterator(data_); }
+
+		iterator end() { return iterator(&data_[size_]); }
+
+		const_iterator end() const { return const_iterator(&data_[size_]); }
+
 		// reverse_iterator rbegin();
 		// const_reverse_iterator rbegin() const;
       	// reverse_iterator rend();
 		// const_reverse_iterator rend() const;
 
 		// 																		Capacity
-		size_type		size() const { return size_; };
+		size_type		size() const { return size_; }
 
-		size_type		max_size() const { return alloc_.max_size(); };
+		size_type		max_size() const { return alloc_.max_size(); }
 
 		void			resize (size_type n, value_type val){
 			if (n == size_)
@@ -102,9 +130,9 @@ class vector
 			size_ = n;
 		}
 
-		size_type		capacity() const { return capacity_; };
+		size_type		capacity() const { return capacity_; }
 
-		bool			empty() const { return (size_ == 0); };
+		bool			empty() const { return (size_ == 0); }
 
 		void			reserve (size_type n) {
 			if (n <= capacity_) return;
@@ -130,9 +158,9 @@ class vector
 		}
 
 		//																		Access
-		reference		operator[] (size_type n) { return data_[n]; };
+		reference		operator[] (size_type n) { return data_[n]; }
 
-		const_reference	operator[] (size_type n) const { return data_[n]; };
+		const_reference	operator[] (size_type n) const { return data_[n]; }
 
 		reference		at (size_type n) {
 			if (n >= size_ || n < 0)
@@ -146,13 +174,13 @@ class vector
 			return (data_[n]);
 		}
 
-		reference		front() { return *data_; };
+		reference		front() { return *data_; }
 
-		const_reference	front() const { return *data_; };
+		const_reference	front() const { return *data_; }
 
-		reference		back() { return data_[size_ - 1]; };
+		reference		back() { return data_[size_ - 1]; }
 
-		const_reference	back() const { return data_[size_ - 1]; };
+		const_reference	back() const { return data_[size_ - 1]; }
 
 		//																		Modifiers
 

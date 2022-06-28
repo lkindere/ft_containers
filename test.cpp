@@ -6,12 +6,11 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:04:17 by lkindere          #+#    #+#             */
-/*   Updated: 2022/06/27 20:33:08 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/06/28 11:10:19 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <vector>
-#include <memory>
 #include <iostream>
 
 #include "ft_vector.hpp"
@@ -270,6 +269,9 @@ int	main(void)
 
 // 	std::cout << "Empty:    " << ftv.empty() << std::endl;
 // 	std::cout << "Empty:    " << stv.empty() << "\n\n";
+
+// ft::vector<int>::iterator	it;
+std::vector<int>::iterator	it;
 
 	// system("leaks a.out");
 	return (0);
