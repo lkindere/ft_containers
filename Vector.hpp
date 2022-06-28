@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 12:37:52 by lkindere          #+#    #+#             */
-/*   Updated: 2022/06/28 14:18:03 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/06/28 22:48:44 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,20 +41,30 @@ class vector
 
 	public:
 		//																		Constructors
-		explicit vector(const allocator_type& alloc = allocator_type()) {}
-		// vector (size_type n, const value_type& val = value_type(),
-		// const allocator_type& alloc = allocator_type());
-		// template <class InputIterator> vector (InputIterator first, InputIterator last,
-		// const allocator_type& alloc = allocator_type());
+		explicit vector (const allocator_type& alloc = allocator_type()) : data_(nullptr), size_(0), capacity_(0)  {}
+		// explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type());
+		// template <class InputIterator>
+        // vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type());
 		// vector (const vector& x);
 		// ~vector();
 
-		//																		Iterators
+		vector&	operator= (const vector& x) {
+			for (;size_ > 0; --size_)
+				alloc_.destroy(&data_[size_ - 1]);
+			if (capacity_ < x.size_){
+				alloc_.deallocate(data_, capacity_);
+				data_ = alloc_.allocate(x.size_);
+				capacity_ = x.size_;
+			}
+			for (;size_ < x.size_; ++size_)
+				alloc_.construct(&data_[size_], x.data_[size_]);
+			return (*this);
+		}
 
-		// //Iterators
+
+		//																		Iterators
 		iterator begin() { return iterator(data_); }
 
-	
 		const_iterator begin() const { return const_iterator(data_); }
 
 		iterator end() { return iterator(&data_[size_]); }
@@ -62,9 +72,13 @@ class vector
 		const_iterator end() const { return const_iterator(&data_[size_]); }
 
 		reverse_iterator rbegin() { return reverse_iterator(&data_[size_ - 1]); }
+
 		const_reverse_iterator rbegin() const { return const_reverse_iterator(&data_[size_ - 1]); }
+
       	reverse_iterator rend() { return reverse_iterator(&data_[-1]); }
+
 		const_reverse_iterator rend() const { return const_reverse_iterator(&data_[-1]); }
+
 
 		// 																		Capacity
 		size_type		size() const { return size_; }
@@ -84,9 +98,7 @@ class vector
 					alloc_.construct(&data_[size_], val);
 				return ;
 			}
-			T	*new_data;
-
-			new_data = alloc_.allocate(n, 0);
+			value_type*	new_data = alloc_.allocate(n, 0);
 			for (size_t i = 0; i < size_; ++i)
 				new_data[i] = data_[i];
 			alloc_.construct(&new_data[size_], val);
@@ -113,15 +125,14 @@ class vector
 				capacity_ = n;
 				return ;
 			}
-			T*	new_data;
-
-			new_data = alloc_.allocate(n, 0);
+			value_type*	new_data = alloc_.allocate(n, 0);
 			for (size_t i = 0; i < size_; ++i)
 				new_data[i] = data_[i];
 			alloc_.deallocate(data_, capacity_);
 			data_ = new_data;
 			capacity_ = n;
 		}
+
 
 		//																		Access
 		reference		operator[] (size_type n) { return data_[n]; }
@@ -148,19 +159,44 @@ class vector
 
 		const_reference	back() const { return data_[size_ - 1]; }
 
+
 		//																		Modifiers
 
-		// template <class InputIterator> void assign (InputIterator first, InputIterator last); ???
-		// void assign (size_type n, const value_type& val);
+
+		//Seems to be fighting with the variation below something something enable if???
+		
+		// template <class InputIterator>
+		// void assign (InputIterator first, InputIterator last) {
+		// 	size_type	n = std::distance(first, last);
+		// 	for (;size_ != 0; --size_)
+		// 		alloc_.destroy(&data_[size_ - 1]);
+		// 	if (n > capacity_){
+		// 		alloc_.deallocate(data_, capacity_);
+		// 		data_ = alloc_.allocate(n, 0);
+		// 	}
+		// 	for (;first != last; ++first)
+		// 		alloc_.construct(&data_[size_++], *first);
+		// }
+	
+		void assign (size_type n, const value_type& val) {
+			for (;size_ != 0; --size_)
+				alloc_.destroy(&data_[size_ - 1]);
+			if (n > capacity_){
+				alloc_.deallocate(data_, capacity_);
+				data_ = alloc_.allocate(n, 0);
+				capacity_ = n;
+			}
+			for (;size_ < n; ++size_)
+				alloc_.construct(&data_[size_], val);
+		}
+
 		void			push_back (const value_type& val) {
 			if (size_ < capacity_){
 				data_[size_] = val;
 				++size_;
 				return ;
 			}
-			T	*new_data;
-
-			new_data = alloc_.allocate(size_ + 1, 0);
+			value_type*	new_data = alloc_.allocate(size_ + 1, 0);
 			for (size_t i = 0; i < size_; ++i)
 				new_data[i] = data_[i];
 			alloc_.construct(&new_data[size_], val);
@@ -175,9 +211,59 @@ class vector
 			--size_;
 		};
 
-		// iterator insert (iterator position, const value_type& val); ???
-    	// void insert (iterator position, size_type n, const value_type& val);
-		// template <class InputIterator> void insert (iterator position, InputIterator first, InputIterator last); ???
+		iterator insert (iterator position, const value_type& val) {
+			if (size_ == capacity_){
+				size_type	i = 0;
+				value_type	*new_data = alloc_.allocate(capacity_ + 1, 0);
+
+				for (iterator it = begin(); it != position; ++it)
+					new_data[i++] = *it;
+				alloc_.construct(&new_data[i], val);
+				iterator ret(&new_data[i]);
+				for (; position != end(); ++position)
+					new_data[++i] = *position;
+				alloc_.deallocate(data_, capacity_);
+				data_ = new_data;
+				++capacity_;
+				++size_;
+				return ret;
+			}
+			for (iterator	it(end()); it != position; --it)
+				*it = *(it - 1);
+			size_++;
+			alloc_.construct(&(*position), val);
+			return position;
+		}
+	
+    	void insert (iterator position, size_type n, const value_type& val){
+			if (size_ + n > capacity_){
+				size_type	i = 0;
+				value_type	*new_data = alloc_.allocate(capacity_ + n, 0);
+
+				for (iterator	it = begin(); it != position; ++it)
+					new_data[i++] = *it;
+				for (size_type	j = 0; j < n; ++j)
+					alloc_.construct(&new_data[i + j], val);
+				i += n - 1;
+				iterator ret(&new_data[i]);
+				for (; position != end(); ++position)
+					new_data[++i] = *position;
+				alloc_.deallocate(data_, capacity_);
+				data_ = new_data;
+				capacity_ = size_ + n;
+				size_ += n;
+				return ;
+			}
+			for (iterator	it(end() - 1 + n); it != position; --it)
+				*it = *(it - n);
+			size_+= n;
+			for (;n > 0; --n)
+				alloc_.construct(&(*position++), val);
+		}
+
+		// template <class InputIterator>
+		// void insert (iterator position, InputIterator first, InputIterator last);
+		
 		// iterator erase (iterator position); ???
 		// iterator erase (iterator first, iterator last); ???
 		// void swap (vector& x);
