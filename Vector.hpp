@@ -1,71 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_vector.hpp                                      :+:      :+:    :+:   */
+/*   Vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 12:37:52 by lkindere          #+#    #+#             */
-/*   Updated: 2022/06/28 11:10:57 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/06/28 14:18:03 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
+#include "VectorIterator.hpp"
 #include <memory>
 
 namespace ft {
-
-template <typename T>
-class VectorIterator
-{
-	public:
-		typedef	T									value_type;
-		typedef	T*									pointer;
-		typedef T&									reference;
-		typedef	ptrdiff_t							difference_type;
-		typedef std::random_access_iterator_tag		iterator_category;
-		
-	private:
-		pointer		ptr_;
-	
-	public:
-		//																	Constructors
-		VectorIterator(pointer ptr = nullptr) { ptr_ = ptr; }
-		//Copy constructor?
-		~VectorIterator() {}
-		
-		//																	Operators
-		VectorIterator<value_type>&	operator=(pointer ptr) { ptr_ = ptr; return (*this); }
-
-		bool						operator==(const VectorIterator<value_type>& iter) const {
-			return (ptr_ == iter.getConstPtr());
-		}
-
-		bool						operator!=(const VectorIterator<value_type>& iter) const {
-			return (ptr_ != iter.getConstPtr());
-		}
-
-		pointer			getPtr() const { return ptr_; }
-		const pointer	getConstPtr() const { return ptr_; }
-};
-
 template <typename T, typename Alloc = std::allocator<T> >
 class vector
 {
 	public:
-		typedef T									value_type;
-		typedef Alloc								allocator_type;
-		typedef	typename Alloc::reference			reference;
-		typedef typename Alloc::const_reference		const_reference;
-		typedef typename Alloc::pointer				pointer;
-		typedef typename Alloc::const_pointer		const_pointer;
-		typedef VectorIterator<value_type>			iterator;
-		typedef VectorIterator<const value_type>	const_iterator;
-		// typedef typename rev_vector_iterator<T>	reverse_iterator;
-		// typedef typename							const_reverse_iterator;
-		typedef	ptrdiff_t							difference_type;
-		typedef	size_t								size_type;
+		typedef T										value_type;
+		typedef Alloc									allocator_type;
+		typedef	typename Alloc::reference				reference;
+		typedef typename Alloc::const_reference			const_reference;
+		typedef typename Alloc::pointer					pointer;
+		typedef typename Alloc::const_pointer			const_pointer;
+		typedef VectorIterator<value_type>				iterator;
+		typedef VectorIterator<const value_type>		const_iterator;
+		typedef VectorRevIterator<value_type>			reverse_iterator;
+		typedef VectorRevIterator<const value_type>		const_reverse_iterator;
+		typedef	ptrdiff_t								difference_type;
+		typedef	size_t									size_type;
 
 	private:
 		pointer					data_;
@@ -95,10 +61,10 @@ class vector
 
 		const_iterator end() const { return const_iterator(&data_[size_]); }
 
-		// reverse_iterator rbegin();
-		// const_reverse_iterator rbegin() const;
-      	// reverse_iterator rend();
-		// const_reverse_iterator rend() const;
+		reverse_iterator rbegin() { return reverse_iterator(&data_[size_ - 1]); }
+		const_reverse_iterator rbegin() const { return const_reverse_iterator(&data_[size_ - 1]); }
+      	reverse_iterator rend() { return reverse_iterator(&data_[-1]); }
+		const_reverse_iterator rend() const { return const_reverse_iterator(&data_[-1]); }
 
 		// 																		Capacity
 		size_type		size() const { return size_; }
@@ -186,7 +152,7 @@ class vector
 
 		// template <class InputIterator> void assign (InputIterator first, InputIterator last); ???
 		// void assign (size_type n, const value_type& val);
-		void			push_back (const reference val) {
+		void			push_back (const value_type& val) {
 			if (size_ < capacity_){
 				data_[size_] = val;
 				++size_;

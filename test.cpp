@@ -6,14 +6,14 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:04:17 by lkindere          #+#    #+#             */
-/*   Updated: 2022/06/28 11:10:19 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/06/28 14:21:58 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <vector>
 #include <iostream>
 
-#include "ft_vector.hpp"
+#include "Vector.hpp"
 
 
 int	main(void)
@@ -270,8 +270,50 @@ int	main(void)
 // 	std::cout << "Empty:    " << ftv.empty() << std::endl;
 // 	std::cout << "Empty:    " << stv.empty() << "\n\n";
 
-// ft::vector<int>::iterator	it;
-std::vector<int>::iterator	it;
+// ft::vector<int>::iterator	it1(vec.begin());
+// ft::vector<int>::iterator	it2(vec.begin());
+
+// 	it1 += 3;
+	
+//  	std::cout << (it1 == it2) << std::endl;
+// 	std::cout << it1[0] << std::endl;
+
+ft::vector<int>		ftvec;
+
+ftvec.push_back(1);
+ftvec.push_back(2);
+ftvec.push_back(3);
+ftvec.push_back(4);
+ftvec.push_back(5);
+ftvec.push_back(6);
+ftvec.push_back(7);
+ftvec.push_back(8);
+ftvec.push_back(9);
+ftvec.push_back(10);
+
+std::vector<int>	stdvec;
+
+stdvec.push_back(1);
+stdvec.push_back(2);
+stdvec.push_back(3);
+stdvec.push_back(4);
+stdvec.push_back(5);
+stdvec.push_back(6);
+stdvec.push_back(7);
+stdvec.push_back(8);
+stdvec.push_back(9);
+stdvec.push_back(10);
+
+
+std::vector<int>::iterator		stditer(stdvec.begin());
+ft::vector<int>::iterator		ftiter(ftvec.begin());
+
+for (int i = 0; i < 10; i++)
+{
+	std::cout << stditer[i] << std::endl;
+	std::cout << ftiter[i] << std::endl;
+	std::cout << std::endl;
+}
 
 	// system("leaks a.out");
 	return (0);
