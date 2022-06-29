@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:04:17 by lkindere          #+#    #+#             */
-/*   Updated: 2022/06/28 22:47:53 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/06/29 16:59:39 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,9 @@
 
 #include "Vector.hpp"
 
-
 int	main(void)
 {
-// 	srand(time(NULL));
+	srand(time(NULL));
 
 // 	ft::vector<int> ftv;
 // 	std::vector<int> stv;
@@ -271,22 +270,46 @@ int	main(void)
 // 	std::cout << "Empty:    " << stv.empty() << "\n\n";
 
 
+	ft::vector<int> ftv1(5, 42);
+	ft::vector<int> ftv2(ftv1);
 
-	ft::vector<int>		vec;
-	std::vector<int>	stdvec;
+	// ftv1.push_back(1);
+	// ftv2.push_back(1);
 
-	vec.push_back(1);
-	vec.push_back(2);
-	vec.push_back(3);
-	vec.push_back(4);
-	vec.push_back(5);
-	vec.push_back(6);
-	
-	vec.reserve(100);
-	std::cout << *vec.insert(vec.begin() + 2, 42) << std::endl;
-	
-	for (ft::vector<int>::iterator	it = vec.begin(); it != vec.end(); ++it)
+	// ftv1.push_back(2);
+	// ftv2.push_back(2);
+
+	// ftv1.push_back(1);
+	// ftv2.push_back(3);
+
+	// ftv1.push_back(4);
+	// ftv2.push_back(4);
+
+	// std::cout << (ftv1 >= ftv2) << std::endl;
+
+	// ftv.swap(stv);
+
+	// ftv.erase(ftv.begin(), ftv.begin());
+	// stv.erase(stv.begin(), stv.begin());
+
+	// for (int i = 0; i < 4; ++i){
+	// 	ftv.erase(ftv.begin());
+	// 	stv.erase(stv.begin());
+	// }
+
+	// for (std::vector<int>::iterator	it = stv.begin(); it != stv.end(); ++it){
+	// 	std::cout << *it << std::endl;
+	// }
+
+	// std::cout << std::endl;
+
+	for (ft::vector<int>::iterator	it = ftv1.begin(); it != ftv1.end(); ++it){
 		std::cout << *it << std::endl;
+	}
+
+	std::cout << std::endl;
+	std::cout << ftv1.size() << std::endl;
+	std::cout << ftv1.capacity() << std::endl;
 
 	// system("leaks a.out");
 
