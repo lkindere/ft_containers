@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:04:17 by lkindere          #+#    #+#             */
-/*   Updated: 2022/06/29 16:59:39 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/06/30 15:56:40 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <iostream>
 
 #include "Vector.hpp"
+#include "Integral.hpp"
 
 int	main(void)
 {
@@ -270,8 +271,8 @@ int	main(void)
 // 	std::cout << "Empty:    " << stv.empty() << "\n\n";
 
 
-	ft::vector<int> ftv1(5, 42);
-	ft::vector<int> ftv2(ftv1);
+	// ft::vector<int> ftv1(5, 42);
+	// ft::vector<int> ftv2(ftv1);
 
 	// ftv1.push_back(1);
 	// ftv2.push_back(1);
@@ -303,13 +304,19 @@ int	main(void)
 
 	// std::cout << std::endl;
 
-	for (ft::vector<int>::iterator	it = ftv1.begin(); it != ftv1.end(); ++it){
-		std::cout << *it << std::endl;
-	}
+	// for (ft::vector<int>::iterator	it = ftv1.begin(); it != ftv1.end(); ++it){
+	// 	std::cout << *it << std::endl;
+	// }
 
-	std::cout << std::endl;
-	std::cout << ftv1.size() << std::endl;
-	std::cout << ftv1.capacity() << std::endl;
+	// std::is_integral<int>
+
+	// std::cout << std::endl;
+	// std::cout << ftv1.size() << std::endl;
+	// std::cout << ftv1.capacity() << std::endl;
+
+	#include <type_traits>
+
+	std::cout << ft::is_integral<volatile const int>::value << "\n";
 
 	// system("leaks a.out");
 
