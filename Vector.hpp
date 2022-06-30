@@ -6,13 +6,14 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 12:37:52 by lkindere          #+#    #+#             */
-/*   Updated: 2022/06/29 17:01:36 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/06/30 16:59:36 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include "VectorIterator.hpp"
+#include "Integral.hpp"
 #include <memory>
 
 namespace ft {
@@ -42,14 +43,17 @@ class vector
 	public:
 		//																		Constructors
 
-		explicit vector (const allocator_type& alloc = allocator_type())
+		explicit vector
+			(const allocator_type& alloc = allocator_type())
 			: data_(nullptr), size_(0), capacity_(0)  {}
 		
-		explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type())
+		explicit vector (size_type n, const value_type& val = value_type(),
+			const allocator_type& alloc = allocator_type())
 			: data_(nullptr), size_(0), capacity_(0) { assign(n, val); }
 
 		template <class InputIterator>
-        vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type())
+        vector (InputIterator first, InputIterator last,
+			const allocator_type& alloc = allocator_type())
 			:	data_(nullptr), size_(0), capacity_(0) { assign(first, last); }
 			
 		vector (const vector& x) :	data_(nullptr), size_(0), capacity_(0) { *this = x; };
@@ -176,21 +180,20 @@ class vector
 
 
 		//																		Modifiers
-
-		//Seems to be fighting with the variation below something something enable if???
 		
-		// template <class InputIterator>
-		// void			assign (InputIterator first, InputIterator last) {
-		// 	size_type	n = std::distance(first, last);
-		// 	for (;size_ != 0; --size_)
-		// 		alloc_.destroy(&data_[size_ - 1]);
-		// 	if (n > capacity_){
-		// 		alloc_.deallocate(data_, capacity_);
-		// 		data_ = alloc_.allocate(n, 0);
-		// 	}
-		// 	for (;first != last; ++first)
-		// 		alloc_.construct(&data_[size_++], *first);
-		// }
+		template <class InputIterator,
+			class = typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type>
+		void			assign (InputIterator first, InputIterator last) {
+			size_type	n = std::distance(first, last);
+			for (;size_ != 0; --size_)
+				alloc_.destroy(&data_[size_ - 1]);
+			if (n > capacity_){
+				alloc_.deallocate(data_, capacity_);
+				data_ = alloc_.allocate(n, 0);
+			}
+			for (;first != last; ++first)
+				alloc_.construct(&data_[size_++], *first);
+		}
 	
 		void			assign (size_type n, const value_type& val) {
 			for (;size_ != 0; --size_)
@@ -274,34 +277,32 @@ class vector
 				alloc_.construct(&(*position++), val);
 		}
 
-		//Conflicts with the version above
+		template <class InputIterator,
+			class = typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type>
+		void insert (iterator position, InputIterator first, InputIterator last){
+			size_type	n = std::distance(first, last);
+			if (size_ + n > capacity_){
+				value_type	*new_data = alloc_.allocate(capacity_ + n, 0);
+				size_type	i = 0;
 
-		// template <class InputIterator>
-		// void insert (iterator position, InputIterator first, InputIterator last){
-		// 	size_type	n = std::distance(first, last);
-
-		// 	if (size_ + n > capacity_){
-		// 		value_type	*new_data = alloc_.allocate(capacity_ + n, 0);
-		// 		size_type	i = 0;
-
-		// 		for (iterator	it = begin(); it != position; ++it)
-		// 			new_data[i++] = *it;
-		// 		for (;first != last; ++first)
-		// 			alloc_.construct(&new_data[i++], *first);
-		// 		for (;position != end(); ++position)
-		// 			new_data[i++] = *position;
-		// 		alloc_.deallocate(data_, capacity_);
-		// 		data_ = new_data;
-		// 		capacity_ = size_ + n;
-		// 		size_ += n;
-		// 		return ;
-		// 	}
-		// 	for (iterator	it(end() - 1 + n); it != position; --it)
-		// 		*it = *(it - n);
-		// 	size_+= n;
-		// 	for (;first != last; ++first)
-		// 		alloc_.construct(&(*position++), *first);
-		// }
+				for (iterator	it = begin(); it != position; ++it)
+					new_data[i++] = *it;
+				for (;first != last; ++first)
+					alloc_.construct(&new_data[i++], *first);
+				for (;position != end(); ++position)
+					new_data[i++] = *position;
+				alloc_.deallocate(data_, capacity_);
+				data_ = new_data;
+				capacity_ = size_ + n;
+				size_ += n;
+				return ;
+			}
+			for (iterator	it(end() - 1 + n); it != position; --it)
+				*it = *(it - n);
+			size_+= n;
+			for (;first != last; ++first)
+				alloc_.construct(&(*position++), *first);
+		}
 		
 		iterator	erase (iterator position){
 			alloc_.destroy(&(*position));
@@ -349,10 +350,11 @@ class vector
 
 		//																		Non member overloads
 
-		friend	bool	operator==( const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs ) {
+		friend	bool operator==( const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs ) {
 			if (lhs.size_ != rhs.size_)
 			 	return false;
-			for (const_iterator	lit	= lhs.begin(), rit = rhs.begin(); lit != lhs.end(); ++lit, ++rit)
+			for (const_iterator	lit	= lhs.begin(), rit = rhs.begin();
+				lit != lhs.end(); ++lit, ++rit)
 				if (*lit != *rit)
 					return false;
 			return true;
@@ -361,14 +363,16 @@ class vector
 		friend bool operator!=( const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs ) {
 			if (lhs.size_ != rhs.size_)
 			 	return true;
-			for (const_iterator	lit	= lhs.begin(), rit = rhs.begin(); lit != lhs.end(); ++lit, ++rit)
+			for (const_iterator	lit	= lhs.begin(), rit = rhs.begin();
+				lit != lhs.end(); ++lit, ++rit)
 				if (*lit != *rit)
 					return true;
 			return false;
 		}
 
 		friend bool operator<( const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs ) {
-			for (const_iterator lit = lhs.begin(), rit = rhs.begin(); lit != lhs.end() && rit != rhs.end();
+			for (const_iterator lit = lhs.begin(), rit = rhs.begin();
+				lit != lhs.end() && rit != rhs.end();
 				++lit, ++rit) {
 				if (*lit < *rit)
 					return true;
@@ -379,7 +383,8 @@ class vector
 		}
 
 		friend bool operator<=( const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs ) {
-			for (const_iterator lit = lhs.begin(), rit = rhs.begin(); lit != lhs.end() && rit != rhs.end();
+			for (const_iterator lit = lhs.begin(), rit = rhs.begin();
+				lit != lhs.end() && rit != rhs.end();
 				++lit, ++rit) {
 				if (*lit < *rit)
 					return true;
@@ -390,7 +395,8 @@ class vector
 		}
 
 		friend bool operator>( const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs ) {
-			for (const_iterator lit = lhs.begin(), rit = rhs.begin(); lit != lhs.end() && rit != rhs.end();
+			for (const_iterator lit = lhs.begin(), rit = rhs.begin();
+				lit != lhs.end() && rit != rhs.end();
 				++lit, ++rit) {
 				if (*lit > *rit)
 					return true;
@@ -401,7 +407,8 @@ class vector
 		}
 
 		friend bool operator>=( const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs ) {
-			for (const_iterator lit = lhs.begin(), rit = rhs.begin(); lit != lhs.end() && rit != rhs.end();
+			for (const_iterator lit = lhs.begin(), rit = rhs.begin();
+				lit != lhs.end() && rit != rhs.end();
 				++lit, ++rit) {
 				if (*lit > *rit)
 					return true;

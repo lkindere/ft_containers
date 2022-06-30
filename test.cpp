@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:04:17 by lkindere          #+#    #+#             */
-/*   Updated: 2022/06/30 15:56:40 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/06/30 16:49:32 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -314,9 +314,25 @@ int	main(void)
 	// std::cout << ftv1.size() << std::endl;
 	// std::cout << ftv1.capacity() << std::endl;
 
-	#include <type_traits>
+	// ft::vector<int>		vec(5, 5);
+	// ft::vector<int>		vec2;
 
-	std::cout << ft::is_integral<volatile const int>::value << "\n";
+
+	// vec2.push_back(2);
+	// vec2.push_back(3);
+
+	// vec.assign(5, 5);
+
+	// for (ft::vector<int>::iterator	it = vec.begin(); it != vec.end(); ++it)
+	// 	std::cout << *it << "\n";
+
+	// std::cout << "\n";
+
+	// vec.assign(vec2.begin(), vec2.end());
+
+	// 	for (ft::vector<int>::iterator	it = vec.begin(); it != vec.end(); ++it)
+	// 	std::cout << *it << "\n";
+
 
 	// system("leaks a.out");
 
