@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/30 14:02:54 by lkindere          #+#    #+#             */
-/*   Updated: 2022/06/30 16:32:57 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/01 14:37:02 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,5 +72,27 @@ struct enable_if {};
 template <typename T>
 struct enable_if<true, T> { typedef T type; };
 
+
+//																		Compares
+
+template <typename InputIterator1, typename InputIterator2>
+bool	equal (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2) {
+		for (;first1 != last1; ++first1, ++first2)
+			if (*first1 != *first2)
+				return false;
+		return true;
+}
+
+template <typename InputIterator1, typename InputIterator2>
+bool	lexicographical_compare (InputIterator1 first1, InputIterator1 last1,
+								 InputIterator2 first2, InputIterator2 last2) {
+		for (;first1 != last1 && first2 != last2; ++first1, ++first2){
+			if (*first1 < *first2)
+				return true;
+			if (*first1 > *first2)
+				return false;
+		}
+		return ((first1 == last1) && (first2 != last2));
+}
 
 }

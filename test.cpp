@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:04:17 by lkindere          #+#    #+#             */
-/*   Updated: 2022/06/30 16:49:32 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/01 19:24:52 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -334,7 +334,40 @@ int	main(void)
 	// 	std::cout << *it << "\n";
 
 
-	// system("leaks a.out");
+	ft::vector<int>	vec1;
 
+	vec1.push_back(4);
+	vec1.push_back(2);
+
+	// // vec1.resize(5);
+	// // vec2.resize(5);
+
+
+	// ft::vector<int>	vec1(5, 42);
+
+	// ft::vector<int>	vec2;
+
+	// vec2.assign(vec1.begin(), vec1.end());
+
+	std::cout << "Vec 1: " << std::endl;
+
+	for(ft::vector<int>::const_iterator	it = vec1.begin(); it != vec1.end(); ++it)
+		std::cout << *it << std::endl;
+
+
+	// std::cout << "\nVec 2: " << std::endl;
+
+	// for(ft::vector<int>::iterator	it = vec2.begin(); it != vec2.end(); ++it)
+	// 	std::cout << *it << std::endl;
+
+	// #include <iterator>
+	// #include <vector>
+
+	// ft::vector<int>::iterator it2;
+	// ft::vector<int>::const_iterator	i1 = it2;
+
+
+
+	// system("leaks a.out");
 	return (0);
 }

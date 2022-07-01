@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 12:37:52 by lkindere          #+#    #+#             */
-/*   Updated: 2022/06/30 16:59:36 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/01 19:49:54 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ class vector
 
 		size_type		max_size() const { return alloc_.max_size(); }
 
-		void			resize (size_type n, value_type val){
+		void			resize (size_type n, value_type val = value_type()){
 			if (n == size_)
 				return ;
 			if (n < size_){
@@ -116,7 +116,7 @@ class vector
 					alloc_.construct(&data_[size_], val);
 				return ;
 			}
-			value_type*	new_data = alloc_.allocate(n, 0);
+			value_type*	new_data = alloc_.allocate(n);
 			for (size_t i = 0; i < size_; ++i)
 				new_data[i] = data_[i];
 			alloc_.construct(&new_data[size_], val);
@@ -143,7 +143,7 @@ class vector
 				capacity_ = n;
 				return ;
 			}
-			value_type*	new_data = alloc_.allocate(n, 0);
+			value_type*	new_data = alloc_.allocate(n);
 			for (size_t i = 0; i < size_; ++i)
 				new_data[i] = data_[i];
 			alloc_.deallocate(data_, capacity_);
@@ -181,18 +181,19 @@ class vector
 
 		//																		Modifiers
 		
-		template <class InputIterator,
-			class = typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type>
-		void			assign (InputIterator first, InputIterator last) {
+		template <class InputIterator>
+		typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type
+					assign (InputIterator first, InputIterator last) {
 			size_type	n = std::distance(first, last);
 			for (;size_ != 0; --size_)
 				alloc_.destroy(&data_[size_ - 1]);
 			if (n > capacity_){
 				alloc_.deallocate(data_, capacity_);
-				data_ = alloc_.allocate(n, 0);
+				data_ = alloc_.allocate(n);
 			}
 			for (;first != last; ++first)
 				alloc_.construct(&data_[size_++], *first);
+			capacity_ = n;
 		}
 	
 		void			assign (size_type n, const value_type& val) {
@@ -200,7 +201,7 @@ class vector
 				alloc_.destroy(&data_[size_ - 1]);
 			if (n > capacity_){
 				alloc_.deallocate(data_, capacity_);
-				data_ = alloc_.allocate(n, 0);
+				data_ = alloc_.allocate(n);
 				capacity_ = n;
 			}
 			for (;size_ < n; ++size_)
@@ -213,13 +214,20 @@ class vector
 				++size_;
 				return ;
 			}
-			value_type*	new_data = alloc_.allocate(size_ + 1, 0);
+			value_type*		new_data;
+			if (capacity_ == 0){
+				new_data = alloc_.allocate(1);
+				capacity_ = 1;
+			}
+			else{
+				new_data = alloc_.allocate(capacity_ * 2);
+				capacity_ *= 2;
+			}
 			for (size_t i = 0; i < size_; ++i)
 				new_data[i] = data_[i];
 			alloc_.construct(&new_data[size_], val);
 			alloc_.deallocate(data_, capacity_);
 			data_ = new_data;
-			++capacity_;
 			++size_;
 		}
 
@@ -231,7 +239,7 @@ class vector
 		iterator insert (iterator position, const value_type& val) {
 			if (size_ == capacity_){
 				size_type	i = 0;
-				value_type	*new_data = alloc_.allocate(capacity_ + 1, 0);
+				value_type	*new_data = alloc_.allocate(capacity_ + 1);
 
 				for (iterator it = begin(); it != position; ++it)
 					new_data[i++] = *it;
@@ -255,7 +263,7 @@ class vector
     	void insert (iterator position, size_type n, const value_type& val){
 			if (size_ + n > capacity_){
 				size_type	i = 0;
-				value_type	*new_data = alloc_.allocate(capacity_ + n, 0);
+				value_type	*new_data = alloc_.allocate(capacity_ + n);
 
 				for (iterator	it = begin(); it != position; ++it)
 					new_data[i++] = *it;
@@ -277,12 +285,12 @@ class vector
 				alloc_.construct(&(*position++), val);
 		}
 
-		template <class InputIterator,
-			class = typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type>
-		void insert (iterator position, InputIterator first, InputIterator last){
+		template <class InputIterator>
+		typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type
+			insert (iterator position, InputIterator first, InputIterator last){
 			size_type	n = std::distance(first, last);
 			if (size_ + n > capacity_){
-				value_type	*new_data = alloc_.allocate(capacity_ + n, 0);
+				value_type	*new_data = alloc_.allocate(capacity_ + n);
 				size_type	i = 0;
 
 				for (iterator	it = begin(); it != position; ++it)
@@ -353,69 +361,29 @@ class vector
 		friend	bool operator==( const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs ) {
 			if (lhs.size_ != rhs.size_)
 			 	return false;
-			for (const_iterator	lit	= lhs.begin(), rit = rhs.begin();
-				lit != lhs.end(); ++lit, ++rit)
-				if (*lit != *rit)
-					return false;
-			return true;
+			return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 		}
 
 		friend bool operator!=( const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs ) {
 			if (lhs.size_ != rhs.size_)
 			 	return true;
-			for (const_iterator	lit	= lhs.begin(), rit = rhs.begin();
-				lit != lhs.end(); ++lit, ++rit)
-				if (*lit != *rit)
-					return true;
-			return false;
+			return (!ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 		}
 
 		friend bool operator<( const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs ) {
-			for (const_iterator lit = lhs.begin(), rit = rhs.begin();
-				lit != lhs.end() && rit != rhs.end();
-				++lit, ++rit) {
-				if (*lit < *rit)
-					return true;
-				if (*lit > *rit)
-					return false;
-			}
-			return false;
+			return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 		}
 
 		friend bool operator<=( const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs ) {
-			for (const_iterator lit = lhs.begin(), rit = rhs.begin();
-				lit != lhs.end() && rit != rhs.end();
-				++lit, ++rit) {
-				if (*lit < *rit)
-					return true;
-				if (*lit > *rit)
-					return false;
-			}
-			return true;
+			return (!ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end()));
 		}
 
 		friend bool operator>( const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs ) {
-			for (const_iterator lit = lhs.begin(), rit = rhs.begin();
-				lit != lhs.end() && rit != rhs.end();
-				++lit, ++rit) {
-				if (*lit > *rit)
-					return true;
-				if (*lit < *rit)
-					return false;
-			}
-			return false;
+			return (ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end()));
 		}
 
 		friend bool operator>=( const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs ) {
-			for (const_iterator lit = lhs.begin(), rit = rhs.begin();
-				lit != lhs.end() && rit != rhs.end();
-				++lit, ++rit) {
-				if (*lit > *rit)
-					return true;
-				if (*lit < *rit)
-					return false;
-			}
-			return true;
+			return (!ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 		}
 };
 
