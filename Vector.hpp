@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 12:37:52 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/01 19:49:54 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/02 21:28:29 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,10 @@ class vector
 		typedef typename Alloc::const_reference			const_reference;
 		typedef typename Alloc::pointer					pointer;
 		typedef typename Alloc::const_pointer			const_pointer;
-		typedef VectorIterator<value_type>				iterator;
-		typedef VectorIterator<const value_type>		const_iterator;
-		typedef VectorRevIterator<value_type>			reverse_iterator;
-		typedef VectorRevIterator<const value_type>		const_reverse_iterator;
+		typedef VectorIterator<pointer>					iterator;
+		typedef VectorIterator<const_pointer>			const_iterator;
+		typedef VectorRevIterator<iterator>				reverse_iterator;
+		typedef VectorRevIterator<const_iterator>		const_reverse_iterator;
 		typedef	ptrdiff_t								difference_type;
 		typedef	size_t									size_type;
 
@@ -116,14 +116,19 @@ class vector
 					alloc_.construct(&data_[size_], val);
 				return ;
 			}
-			value_type*	new_data = alloc_.allocate(n);
+			size_type	new_cap = 1;
+			if (capacity_ > 0)
+				new_cap = capacity_;
+			while (new_cap < n)
+				new_cap *= 2;
+			value_type*	new_data = alloc_.allocate(new_cap);
 			for (size_t i = 0; i < size_; ++i)
 				new_data[i] = data_[i];
-			alloc_.construct(&new_data[size_], val);
+			for (;size_ != n; ++size_)
+				alloc_.construct(&new_data[size_], val);
 			alloc_.deallocate(data_, capacity_);
 			data_ = new_data;
-			capacity_ = n;
-			size_ = n;
+			capacity_ = new_cap;
 		}
 
 		size_type		capacity() const { return capacity_; }
@@ -183,17 +188,19 @@ class vector
 		
 		template <class InputIterator>
 		typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type
-					assign (InputIterator first, InputIterator last) {
+						assign (InputIterator first, InputIterator last) {
+			if (sizeof(*first) != sizeof(*data_))
+				throw(std::invalid_argument("Invalid datatype"));
 			size_type	n = std::distance(first, last);
 			for (;size_ != 0; --size_)
 				alloc_.destroy(&data_[size_ - 1]);
 			if (n > capacity_){
 				alloc_.deallocate(data_, capacity_);
 				data_ = alloc_.allocate(n);
+				capacity_ = n;
 			}
 			for (;first != last; ++first)
 				alloc_.construct(&data_[size_++], *first);
-			capacity_ = n;
 		}
 	
 		void			assign (size_type n, const value_type& val) {
@@ -239,8 +246,7 @@ class vector
 		iterator insert (iterator position, const value_type& val) {
 			if (size_ == capacity_){
 				size_type	i = 0;
-				value_type	*new_data = alloc_.allocate(capacity_ + 1);
-
+				value_type	*new_data = alloc_.allocate(capacity_ * 2);
 				for (iterator it = begin(); it != position; ++it)
 					new_data[i++] = *it;
 				alloc_.construct(&new_data[i], val);
@@ -249,7 +255,7 @@ class vector
 					new_data[++i] = *position;
 				alloc_.deallocate(data_, capacity_);
 				data_ = new_data;
-				++capacity_;
+				capacity_ *= 2;
 				++size_;
 				return ret;
 			}
@@ -263,8 +269,7 @@ class vector
     	void insert (iterator position, size_type n, const value_type& val){
 			if (size_ + n > capacity_){
 				size_type	i = 0;
-				value_type	*new_data = alloc_.allocate(capacity_ + n);
-
+				value_type	*new_data = alloc_.allocate(size_ + n);
 				for (iterator	it = begin(); it != position; ++it)
 					new_data[i++] = *it;
 				for (size_type	j = 0; j < n; ++j)
@@ -288,9 +293,16 @@ class vector
 		template <class InputIterator>
 		typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type
 			insert (iterator position, InputIterator first, InputIterator last){
+			if (sizeof(*first) != sizeof(*data_))
+				throw(std::invalid_argument("Invalid datatype"));
 			size_type	n = std::distance(first, last);
 			if (size_ + n > capacity_){
-				value_type	*new_data = alloc_.allocate(capacity_ + n);
+				size_type	new_cap = 1;
+				if (capacity_ > 0)
+					new_cap = capacity_;
+				while (new_cap < size_ + n)
+					new_cap *= 2;
+				value_type	*new_data = alloc_.allocate(new_cap);
 				size_type	i = 0;
 
 				for (iterator	it = begin(); it != position; ++it)
@@ -301,7 +313,7 @@ class vector
 					new_data[i++] = *position;
 				alloc_.deallocate(data_, capacity_);
 				data_ = new_data;
-				capacity_ = size_ + n;
+				capacity_ = new_cap;
 				size_ += n;
 				return ;
 			}
@@ -345,6 +357,8 @@ class vector
 			x.capacity_ = temp_capacity;
 		}
 
+		friend void	swap (vector& x, vector &y);
+
 		void		clear() {
 			for (;size_ > 0; --size_)
 				alloc_.destroy(&data_[size_ - 1]);
@@ -387,4 +401,10 @@ class vector
 		}
 };
 
+}
+
+namespace std {
+
+	template <typename T>
+	void	swap (ft::vector<T>& x, ft::vector<T> &y) { x.swap(y); }
 }

@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:04:17 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/01 19:24:52 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/02 16:56:05 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -271,103 +271,16 @@ int	main(void)
 // 	std::cout << "Empty:    " << stv.empty() << "\n\n";
 
 
-	// ft::vector<int> ftv1(5, 42);
-	// ft::vector<int> ftv2(ftv1);
+// ft::vector<int>::iterator	first;
+// ft::vector<int>::iterator	second;
 
-	// ftv1.push_back(1);
-	// ftv2.push_back(1);
+// 	std::cout << (first < second) << std::endl;
+// 	std::cout << (first <= second) << std::endl;
+// 	std::cout << (first > second) << std::endl;
+// 	std::cout << (first >= second) << std::endl;
 
-	// ftv1.push_back(2);
-	// ftv2.push_back(2);
+// it = 1 + it;
+// wat = 1 + wat;
 
-	// ftv1.push_back(1);
-	// ftv2.push_back(3);
-
-	// ftv1.push_back(4);
-	// ftv2.push_back(4);
-
-	// std::cout << (ftv1 >= ftv2) << std::endl;
-
-	// ftv.swap(stv);
-
-	// ftv.erase(ftv.begin(), ftv.begin());
-	// stv.erase(stv.begin(), stv.begin());
-
-	// for (int i = 0; i < 4; ++i){
-	// 	ftv.erase(ftv.begin());
-	// 	stv.erase(stv.begin());
-	// }
-
-	// for (std::vector<int>::iterator	it = stv.begin(); it != stv.end(); ++it){
-	// 	std::cout << *it << std::endl;
-	// }
-
-	// std::cout << std::endl;
-
-	// for (ft::vector<int>::iterator	it = ftv1.begin(); it != ftv1.end(); ++it){
-	// 	std::cout << *it << std::endl;
-	// }
-
-	// std::is_integral<int>
-
-	// std::cout << std::endl;
-	// std::cout << ftv1.size() << std::endl;
-	// std::cout << ftv1.capacity() << std::endl;
-
-	// ft::vector<int>		vec(5, 5);
-	// ft::vector<int>		vec2;
-
-
-	// vec2.push_back(2);
-	// vec2.push_back(3);
-
-	// vec.assign(5, 5);
-
-	// for (ft::vector<int>::iterator	it = vec.begin(); it != vec.end(); ++it)
-	// 	std::cout << *it << "\n";
-
-	// std::cout << "\n";
-
-	// vec.assign(vec2.begin(), vec2.end());
-
-	// 	for (ft::vector<int>::iterator	it = vec.begin(); it != vec.end(); ++it)
-	// 	std::cout << *it << "\n";
-
-
-	ft::vector<int>	vec1;
-
-	vec1.push_back(4);
-	vec1.push_back(2);
-
-	// // vec1.resize(5);
-	// // vec2.resize(5);
-
-
-	// ft::vector<int>	vec1(5, 42);
-
-	// ft::vector<int>	vec2;
-
-	// vec2.assign(vec1.begin(), vec1.end());
-
-	std::cout << "Vec 1: " << std::endl;
-
-	for(ft::vector<int>::const_iterator	it = vec1.begin(); it != vec1.end(); ++it)
-		std::cout << *it << std::endl;
-
-
-	// std::cout << "\nVec 2: " << std::endl;
-
-	// for(ft::vector<int>::iterator	it = vec2.begin(); it != vec2.end(); ++it)
-	// 	std::cout << *it << std::endl;
-
-	// #include <iterator>
-	// #include <vector>
-
-	// ft::vector<int>::iterator it2;
-	// ft::vector<int>::const_iterator	i1 = it2;
-
-
-
-	// system("leaks a.out");
 	return (0);
 }
