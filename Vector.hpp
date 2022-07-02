@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 12:37:52 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/02 21:28:29 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/02 22:52:18 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,16 +45,16 @@ class vector
 
 		explicit vector
 			(const allocator_type& alloc = allocator_type())
-			: data_(nullptr), size_(0), capacity_(0)  {}
+			: data_(nullptr), size_(0), capacity_(0), alloc_(alloc)  {}
 		
 		explicit vector (size_type n, const value_type& val = value_type(),
 			const allocator_type& alloc = allocator_type())
-			: data_(nullptr), size_(0), capacity_(0) { assign(n, val); }
+			: data_(nullptr), size_(0), capacity_(0), alloc_(alloc) { assign(n, val); }
 
 		template <class InputIterator>
         vector (InputIterator first, InputIterator last,
 			const allocator_type& alloc = allocator_type())
-			:	data_(nullptr), size_(0), capacity_(0) { assign(first, last); }
+			:	data_(nullptr), size_(0), capacity_(0), alloc_(alloc) { assign(first, last); }
 			
 		vector (const vector& x) :	data_(nullptr), size_(0), capacity_(0) { *this = x; };
 	
@@ -402,6 +402,12 @@ class vector
 };
 
 }
+
+// namespace ft {
+	
+// 	template <typename T>
+// 	void	swap (ft::vector<T>& x, ft::vector<T> &y) { x.swap(y); }
+// }
 
 namespace std {
 

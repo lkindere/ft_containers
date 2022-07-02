@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:04:17 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/02 16:56:05 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/02 22:53:04 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -278,6 +278,17 @@ int	main(void)
 // 	std::cout << (first <= second) << std::endl;
 // 	std::cout << (first > second) << std::endl;
 // 	std::cout << (first >= second) << std::endl;
+
+
+	ft::vector<int> vct;
+	ft::vector<int>::iterator it = vct.begin();
+	// ft::vector<int>::const_iterator cit = vct.begin();
+
+	ft::vector<int>::reverse_iterator rit(it);
+
+	// ft::vector<int>::const_reverse_iterator crit(rit);
+	// ft::vector<int>::const_reverse_iterator crit_(it);
+	// ft::vector<int>::const_reverse_iterator crit_2(cit);
 
 // it = 1 + it;
 // wat = 1 + wat;
