@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 12:37:52 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/02 22:52:18 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/04 00:14:56 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,21 +81,16 @@ class vector
 		//																		Iterators
 
 		iterator begin() { return iterator(data_); }
-
-		const_iterator begin() const { return const_iterator(data_); }
-
 		iterator end() { return iterator(&data_[size_]); }
 
-		const_iterator end() const { return const_iterator(&data_[size_]); }
+		const_iterator begin() const { return iterator(data_); }
+		const_iterator end() const { return iterator(&data_[size_]); }
 
-		reverse_iterator rbegin() { return reverse_iterator(&data_[size_ - 1]); }
+		reverse_iterator rbegin() { return end(); }
+      	reverse_iterator rend() { return begin(); }
 
-		const_reverse_iterator rbegin() const { return const_reverse_iterator(&data_[size_ - 1]); }
-
-      	reverse_iterator rend() { return reverse_iterator(&data_[-1]); }
-
-		const_reverse_iterator rend() const { return const_reverse_iterator(&data_[-1]); }
-
+		const_reverse_iterator rbegin() const { return end(); }
+		const_reverse_iterator rend() const { return begin(); }
 
 		// 																		Capacity
 
@@ -357,8 +352,6 @@ class vector
 			x.capacity_ = temp_capacity;
 		}
 
-		friend void	swap (vector& x, vector &y);
-
 		void		clear() {
 			for (;size_ > 0; --size_)
 				alloc_.destroy(&data_[size_ - 1]);
@@ -399,15 +392,15 @@ class vector
 		friend bool operator>=( const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs ) {
 			return (!ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 		}
-};
 
+};
 }
 
-// namespace ft {
-	
-// 	template <typename T>
-// 	void	swap (ft::vector<T>& x, ft::vector<T> &y) { x.swap(y); }
-// }
+namespace ft {
+
+	template <typename T>
+	void	swap (ft::vector<T>& x, ft::vector<T> &y) { x.swap(y); }
+}
 
 namespace std {
 

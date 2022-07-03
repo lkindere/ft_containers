@@ -6,13 +6,15 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 13:48:39 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/02 22:38:05 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/03 16:19:55 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 namespace ft {
+
+
 
 //																		Traits
 
@@ -44,6 +46,21 @@ struct iterator_traits<const T*>
     typedef const T*							pointer;
     typedef const T&							reference;
     typedef std::random_access_iterator_tag		iterator_category;
+};
+
+//																		Base
+template <typename T>
+class _iterator
+{
+	public:
+   		typedef typename ft::iterator_traits<T>::iterator_category	iterator_category;
+		typedef typename ft::iterator_traits<T>::value_type 		value_type;
+		typedef typename ft::iterator_traits<T>::difference_type	difference_type;
+		typedef typename ft::iterator_traits<T>::reference			reference;
+		typedef typename ft::iterator_traits<T>::pointer			pointer;
+	
+	protected:
+		pointer		ptr_;
 };
 
 }
