@@ -6,14 +6,13 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 03:22:02 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/04 05:15:26 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/04 06:58:33 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../Stack.hpp"
 #include <stack>
 #include <vector>
-#include <chrono>
 #include <sys/time.h>
 
 #define	RUNS 1000000
@@ -62,7 +61,7 @@ int	main(void)
 
 	for (int i = 0; i < RUNS; ++i){
 		int rng = rand();
-		if (rng % 10 < 2)
+		if (rng % 10 > 2)
 		{
 			fstack.push(rng); sstack.push(rng); hstack.push(rng);
 			if (failed(fstack.empty(), sstack.empty(), hstack.empty())
@@ -90,6 +89,10 @@ int	main(void)
 	}
 	status(rip);
 
+	while (!sstack.empty()){
+		sstack.pop(); fstack.pop(); hstack.pop();
+	}
+
 	std::cout << "\nCOMPARISONS\n";
 
 	for (int i = 0; i < RUNS; ++i){
@@ -109,6 +112,15 @@ int	main(void)
 			rip = true;
 		if (rng % 6 == 5 && failed(fstack >= fstack2, sstack >= sstack2, hstack >= hstack2))
 			rip = true;
+		if (rng % 10 < 2)
+			while (sstack.size() != 0)
+			{
+				fstack.pop(); sstack.pop(); hstack.pop();
+				fstack2.pop(); sstack2.pop(); hstack2.pop();
+				if (failed(fstack.empty(), sstack.empty(), hstack.empty())
+					|| failed(fstack.size(), sstack.size(), hstack.size()))
+					rip = true;
+			}
 	}
 	status(rip);
 
