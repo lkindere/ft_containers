@@ -6,11 +6,11 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:04:17 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/03 21:18:50 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/04 00:46:04 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <vector>
+// #include <vector>
 #include <iostream>
 
 #include "Vector.hpp"
@@ -290,11 +290,11 @@ int	main(void)
 	// ft::vector<int>::reverse_iterator crit_(it);
 	// ft::vector<int>::const_reverse_iterator crit_2(cit);
 
-std::vector<int>::iterator	it;
-std::vector<int>::const_iterator	itc;
-std::vector<int>::reverse_iterator r;
+// std::vector<int>::iterator	it;
+// std::vector<int>::const_iterator	itc;
+// std::vector<int>::reverse_iterator r;
 
-#include <vector>
+// #include <vector>
 
 // it = 1 + it;
 // wat = 1 + wat;
