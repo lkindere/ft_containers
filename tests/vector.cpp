@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:04:17 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/04 06:52:47 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/05 10:13:36 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,8 @@ int	main(void)
 
 	std::cout << "\nCLEAR\n";
 
+	svec.assign(50, 5);
+	fvec.assign(50, 5);
 	svec.clear();
 	fvec.clear();
 	if (failed(fvec.empty(), svec.empty())
@@ -174,6 +176,7 @@ int	main(void)
 					rip = true;
 		}
 	}
+	status(rip);
 
 	return 0;
 }
