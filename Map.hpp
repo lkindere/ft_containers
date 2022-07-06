@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 01:01:44 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/05 23:43:44 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/06 21:27:01 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,12 @@ class tree
 		typedef typename allocator_type::size_type			size_type;
 		// typedef typename allocator_type::difference_type	difference_type;
 		
-	private:
+	public: //Make private after testing
 		pointer				root_;
 		size_type			size_;
 		allocator_type		alloc_;
 
-	private:
+	public:	//Make private after testing
 		pointer		allocNode(const value_type &val, pointer parent = nullptr){
 			pointer	node = alloc_.allocate(1);
 			alloc_.construct(node, val);
@@ -64,77 +64,117 @@ class tree
 			return (node);
 		}
 
-		void		balance(pointer insert, e_pos pos){
-			if (insert->parent->color == black)
+		void		leftRotate(pointer target){
+			// std::cout << "\n\n\nPre rotate:\n";
+			// printTree();
+			// std::cout << "Left rotating target: " << target->data.first << "\n";
+			if (!target->parent)
+				root_ = target->right;
+			else if (target->parent->left == target){
+				if (target->right)
+					target->parent->left = target->right;
+				else if (target->left)
+					std::cout << "Should be doing right rotate in this case?\n";
+					// target->parent->left = target->left;
+			}
+			else {
+				if (target->right)
+					target->parent->right = target->right;
+				else if (target->left)
+					std::cout << "Should be doing right rotate in this case?\n";
+					// target->parent->right = target->left;
+			}
+			target->right->parent = target->parent;	//right’s parent becomes current’s parent
+			target->parent = target->right;			//current’s parent becomes right	//Left???
+			pointer	temp = target->right->left;
+			target->right->left = target;			//right’s left becomes current
+			target->right = temp;	//current’s right becomes right’s left
+			// std::cout << "Post rotate\n";
+			// printTree();
+			// std::cout << "\n\n\n\n\n";
+		}
+
+		void		rightRotate(pointer target){
+			// std::cout << "\n\n\nPre rotate:\n";
+			// printTree();
+			// std::cout << "Right rotating target: " << target->data.first << "\n";
+			if (!target->parent)
+				root_ = target->left;
+			else if (target->parent->left == target){
+				if (target->right)
+					std::cout << "Should be doing left rotate in this case?\n";
+					// target->parent->left = target->right;
+				else if (target->left)
+					target->parent->left = target->left;
+			}
+			else {
+				if (target->right)
+					std::cout << "Should be doing left rotate in this case?\n";
+					// target->parent->right = target->right;
+				else if (target->left)
+					target->parent->right = target->left;
+			}
+			target->left->parent = target->parent;	//left’s parent becomes current’s parent
+			target->parent = target->left;			//current’s parent becomes right
+			pointer	temp = target->left->right;
+			target->left->right = target;			//right’s left becomes current
+			target->left = temp;					//current’s right becomes right’s left
+			// std::cout << "Post rotate\n";
+			// printTree();
+			// std::cout << "\n\n\n\n\n";
+		}
+
+		void		balance(pointer target){
+			if (!target->parent){
+				target->color = black;
 				return ;
-			if (pos == left && insert->parent && insert->parent->parent){	//Left child
-				if (insert->parent->parent->right && insert->parent->parent->right->color == red){	//If red uncle
-					insert->parent->parent->left->color = black;
-					insert->parent->parent->right->color = black;
-					insert->parent->parent->color = red;
-					insert = insert->parent->parent;
-					if (!insert->parent){
-						insert->color = black;
-						return ;
-					}
-					(insert->parent->left == insert) ?
-						balance(insert, left) : balance(insert, right);
+			}
+			// std::cout << "Target: " << target->data.first << "\n";
+			// std::cout << "Parent: " << target->parent->data.first << "\n";
+			// std::cout << "Color: " << target->parent->color << "\n";
+			if (target->parent->color == black)
+				return ;
+			if (target->parent->parent->left == target->parent){	//Parent is left child
+				if (target->parent->parent->right && target->parent->parent->right->color == red){	//Uncle is also red	
+					target->parent->color = black;
+					target->parent->parent->right->color = black;
+					target->parent->parent->color = red;
+					balance(target->parent->parent);
 					return ;
-				} //Not sure if check for NULL required
-				if (!insert->parent->parent->right || insert->parent->parent->right->color == black){	//If black/null uncle
-					if (insert->parent->parent->right == insert->parent){	//Triangle
-						insert->parent->left = insert->right;
-						insert->right = insert->parent->parent;
-						insert->parent = insert->parent->parent;
-						insert->right->parent = insert;
-						balance(insert->right, right);
-					}
-					if (insert->parent->parent->left == insert->parent){	//Line
-						insert->parent->right = insert->parent->parent;
-						insert->parent->parent->left = NULL;
-						insert->parent->parent->parent = insert->parent;
-						insert->parent->parent = NULL;
-						insert->parent->color = black;
-						insert->parent->right->color = red;
+				}
+				if ((!target->parent->parent->right) || target->parent->parent->right->color == black){	//Uncle is black
+					if (target->parent->right == target){
+						leftRotate(target->parent);					//Switch to left
+						balance(target->left);
 						return ;
 					}
+					target->parent->color = black;					//Target is left child
+					target->parent->parent->color = red;
+					rightRotate(target->parent->parent);
+					return ;
 				}
 			}
-			if (pos == right && insert->parent && insert->parent->parent){	//Right child
-				// if (insert->parent->parent->right && insert->parent->parent->right->color == red){	//If red uncle
-				// 	insert->parent->parent->left->color = black;
-				// 	insert->parent->parent->right->color = black;
-				// 	insert->parent->parent->color = red;
-				// 	insert = insert->parent->parent;
-				// 	if (!insert->parent){
-				// 		insert->color = black;
-				// 		return ;
-				// 	}
-				// 	(insert->parent->left == insert) ?
-				// 		balance(insert, left) : balance(insert, right);
-				// 	return ;
-				} //Not sure if check for NULL required
-				if (!insert->parent->parent->left || insert->parent->parent->left->color == black){	//If black/null uncle
-					// if (insert->parent->parent->right == insert->parent){	//Triangle
-					// 	insert->parent->left = insert->right;
-					// 	insert->right = insert->parent->parent;
-					// 	insert->parent = insert->parent->parent;
-					// 	insert->right->parent = insert;
-					// 	balance(insert->right, right);
-					// }
-					if (insert->parent->parent->right == insert->parent){	//Line
-						insert->parent->parent->right = insert->parent->left;
-						insert->parent->left = insert->parent->parent;
-						if (insert->parent->parent->parent)
-							insert->parent->parent->parent->right = insert->parent;
-						else {
-							insert->parent = NULL;
-							root_ = insert->parent;
-						}
-						insert->left->color = red;
-						insert->color = black;
-						
-					}
+			if (target->parent->parent->right == target->parent){	//Parent is right child
+				if (target->parent->parent->left && target->parent->parent->left->color == red){	//Uncle is also red	
+					target->parent->color = black;
+					target->parent->parent->left->color = black;
+					target->parent->parent->color = red;
+					std::cout << "Recoloring: " << "\n";
+					printTree();
+					std::cout << std::endl;
+					balance(target->parent->parent);
+					return ;
+				}
+				if ((!target->parent->parent->left) || target->parent->parent->left->color == black){	//Uncle is black
+					if (target->parent->left == target){
+						rightRotate(target->parent);					//Switch to left
+						balance(target->right);
+						return ;
+					}			//Target is right child
+					target->parent->color = black;					//Target is left child
+					target->parent->parent->color = red;
+					leftRotate(target->parent->parent);
+					return ;
 				}
 			}
 		}
@@ -142,7 +182,6 @@ class tree
 	public:
 		tree() : root_(nullptr) {} 
 		~tree() {}
-
 		void	insertNode(const value_type &val) {
 			if (!root_){
 				root_ = allocNode(val);
@@ -158,11 +197,11 @@ class tree
 			}
 			if (val < temp->data){
 				temp->left = allocNode(val, temp);
-				balance(temp->left, left);
-			} 
+				balance(temp->left);
+			}
 			else {
 				temp->right = allocNode(val, temp);
-				balance(temp->right, right);
+				balance(temp->right);
 			}
 		}
 
@@ -170,15 +209,6 @@ class tree
 			return root_->data;
 		}
 
-
-
-
-
-
-
-
-
-		
 		void	printTree(){
 			int	lines = 30;
 			int	spaces = 20;
@@ -186,7 +216,7 @@ class tree
 			if (root_){	//Level 1
 				for (int i = 0; i < lines + spaces / 2; ++i)
 					std::cout << "-";
-				std::cout << root_->data.first;
+				std::cout << root_->data.first << "." << root_->color;
 				for (int i = 0; i < lines; ++i)
 					std::cout << "-";
 				std::cout << std::endl;
@@ -195,10 +225,10 @@ class tree
 				--lines; ++spaces;
 				for (int i = 0; i < lines; ++i)
 					std::cout << "-";
-				(root_->left) ? std::cout << root_->left->data.first : std::cout << "**";
+				(root_->left) ? std::cout << root_->left->data.first << "." << root_->left->color : std::cout << "**";
 				for (int i = 0; i < spaces; ++i)
 					std::cout << ' ';
-				(root_->right) ? std::cout << root_->right->data.first : std::cout << "**";
+				(root_->right) ? std::cout << root_->right->data.first << "." << root_->right->color : std::cout << "**";
 				for (int i = 0; i < lines; ++i)
 					std::cout << "-";
 				std::cout << std::endl;
@@ -207,16 +237,16 @@ class tree
 				lines /= 1.2; spaces /= 2;
 				for (int i = 0; i < lines; ++i)
 					std::cout << "-";
-				(root_->left && root_->left->left) ? std::cout << root_->left->left->data.first : std::cout << "**";
+				(root_->left && root_->left->left) ? std::cout << root_->left->left->data.first << "." << root_->left->left->color : std::cout << "**";
 				for (int i = 0; i < spaces; ++i)
 					std::cout << ' ';
-				(root_->left && root_->left->right) ? std::cout << root_->left->right->data.first : std::cout << "**";
+				(root_->left && root_->left->right) ? std::cout << root_->left->right->data.first << "." << root_->left->right->color : std::cout << "**";
 				for (int i = 0; i < spaces; ++i)
 					std::cout << ' ';
-				(root_->right && root_->right->left) ? std::cout << root_->right->left->data.first : std::cout << "**";
+				(root_->right && root_->right->left) ? std::cout << root_->right->left->data.first << "." << root_->right->left->color : std::cout << "**";
 				for (int i = 0; i < spaces; ++i)
 					std::cout << ' ';
-				(root_->right && root_->right->right) ? std::cout << root_->right->right->data.first : std::cout << "**";
+				(root_->right && root_->right->right) ? std::cout << root_->right->right->data.first << "." << root_->right->right->color : std::cout << "**";
 				for (int i = 0; i < lines; ++i)
 					std::cout << "-";
 				std::cout << std::endl;
@@ -225,28 +255,36 @@ class tree
 				lines /= 1.1; spaces /= 2;
 				for (int i = 0; i < lines; ++i)
 					std::cout << "-";
-				(root_->left && root_->left->left && root_->left->left->left) ? std::cout << root_->left->left->left->data.first : std::cout << "**";
+				(root_->left && root_->left->left && root_->left->left->left) ? std::cout << root_->left->left->left->data.first << "." << root_->left->left->left->color
+					: std::cout << "**";
 				for (int i = 0; i < spaces; ++i)
 					std::cout << ' ';
-				(root_->left && root_->left->left && root_->left->left->right) ? std::cout << root_->left->left->right->data.first : std::cout << "**";
+				(root_->left && root_->left->left && root_->left->left->right) ? std::cout << root_->left->left->right->data.first << "." << root_->left->left->right->color
+					: std::cout << "**";
 				for (int i = 0; i < spaces - 2; ++i)
 					std::cout << ' ';
-				(root_->left && root_->left->right && root_->left->right->left) ? std::cout << root_->left->right->left->data.first : std::cout << "**";
+				(root_->left && root_->left->right && root_->left->right->left) ? std::cout << root_->left->right->left->data.first << "." << root_->left->right->left->color
+					: std::cout << "**";
 				for (int i = 0; i < spaces; ++i)
 					std::cout << ' ';
-				(root_->left && root_->left->right && root_->left->right->right) ? std::cout << root_->left->right->right->data.first : std::cout << "**";
+				(root_->left && root_->left->right && root_->left->right->right) ? std::cout << root_->left->right->right->data.first << "." << root_->left->right->right->color
+					: std::cout << "**";
 				for (int i = 0; i < spaces - 2; ++i)
 					std::cout << ' ';
-				(root_->right && root_->right->left && root_->right->left->left) ? std::cout << root_->right->left->left->data.first : std::cout << "**";
+				(root_->right && root_->right->left && root_->right->left->left) ? std::cout << root_->right->left->left->data.first << "." << root_->right->left->left->color
+					: std::cout << "**";
 				for (int i = 0; i < spaces; ++i)
 					std::cout << ' ';
-				(root_->right && root_->right->left && root_->right->left->right) ? std::cout << root_->right->left->right->data.first : std::cout << "**";
+				(root_->right && root_->right->left && root_->right->left->right) ? std::cout << root_->right->left->right->data.first << "." << root_->right->left->right->color
+					: std::cout << "**";
 				for (int i = 0; i < spaces; ++i)
 					std::cout << ' ';
-				(root_->right && root_->right->right && root_->right->right->left) ? std::cout << root_->right->right->left->data.first : std::cout << "**";
+				(root_->right && root_->right->right && root_->right->right->left) ? std::cout << root_->right->right->left->data.first << "." << root_->right->right->left->color
+					: std::cout << "**";
 				for (int i = 0; i < spaces; ++i)
 					std::cout << ' ';
-				(root_->right && root_->right->right && root_->right->right->right) ? std::cout << root_->right->right->right->data.first : std::cout << "**";
+				(root_->right && root_->right->right && root_->right->right->right) ? std::cout << root_->right->right->right->data.first << "." << root_->right->right->right->color
+					: std::cout << "**";
 				for (int i = 0; i < lines; ++i)
 					std::cout << "-";
 				std::cout << std::endl;
