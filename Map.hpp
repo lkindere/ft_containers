@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 01:01:44 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/07 15:10:57 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/07 15:29:40 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,52 +97,48 @@ class tree
 		}
 
 		void		balance(pointer target){
-			if (!target->parent){
-				target->color = black;
-				return ;
-			}
-			if (target->parent->color == black)
-				return ;
-			if (target->parent->parent->left == target->parent){	//Parent is left child
-				if (target->parent->parent->right && target->parent->parent->right->color == red){	//Uncle is also red	
-					target->parent->color = black;
-					target->parent->parent->right->color = black;
-					target->parent->parent->color = red;
-					balance(target->parent->parent);
+			while (target->parent){
+				if (target->parent->color == black)
 					return ;
-				}
-				if ((!target->parent->parent->right) || target->parent->parent->right->color == black){	//Uncle is black
-					if (target->parent->right == target){
-						leftRotate(target->parent);					//Switch to left
-						balance(target->left);
+				if (target->parent->parent->left == target->parent){
+					if (target->parent->parent->right && target->parent->parent->right->color == red){
+						target->parent->color = black;
+						target->parent->parent->right->color = black;
+						target->parent->parent->color = red;
+						continue ;
+					}
+					if ((!target->parent->parent->right) || target->parent->parent->right->color == black){
+						if (target->parent->right == target){
+							leftRotate(target->parent);
+							continue ;
+						}
+						target->parent->color = black;
+						target->parent->parent->color = red;
+						rightRotate(target->parent->parent);
 						return ;
 					}
-					target->parent->color = black;					//Target is left child
-					target->parent->parent->color = red;
-					rightRotate(target->parent->parent);
-					return ;
 				}
-			}
-			if (target->parent->parent->right == target->parent){	//Parent is right child
-				if (target->parent->parent->left && target->parent->parent->left->color == red){	//Uncle is also red	
-					target->parent->color = black;
-					target->parent->parent->left->color = black;
-					target->parent->parent->color = red;
-					balance(target->parent->parent);
-					return ;
-				}
-				if ((!target->parent->parent->left) || target->parent->parent->left->color == black){	//Uncle is black
-					if (target->parent->left == target){
-						rightRotate(target->parent);					//Switch to left
-						balance(target->right);
+				if (target->parent->parent->right == target->parent){
+					if (target->parent->parent->left && target->parent->parent->left->color == red){
+						target->parent->color = black;
+						target->parent->parent->left->color = black;
+						target->parent->parent->color = red;
+						continue ;
+					}
+					if ((!target->parent->parent->left) || target->parent->parent->left->color == black){
+						if (target->parent->left == target){
+							rightRotate(target->parent);
+							continue ;
+						}
+						target->parent->color = black;
+						target->parent->parent->color = red;
+						leftRotate(target->parent->parent);
 						return ;
-					}			//Target is right child
-					target->parent->color = black;					//Target is left child
-					target->parent->parent->color = red;
-					leftRotate(target->parent->parent);
-					return ;
+					}
 				}
 			}
+			if (!target->parent)
+				target->color = black;
 		}
 
 	public:
