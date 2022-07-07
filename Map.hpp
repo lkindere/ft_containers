@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 01:01:44 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/07 15:29:40 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/07 18:04:51 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 
 namespace ft {
 
-enum e_color {red, black};
+enum e_color {red, black, ventablack};
 enum e_pos {left, right};
 
 template <class T>
@@ -139,6 +139,86 @@ class tree
 			}
 			if (!target->parent)
 				target->color = black;
+		}
+
+		void		destroy(pointer target){
+			alloc_.destroy(target);
+			alloc_.dallocate(target, 1);
+		}
+
+		void		unblack(pointer target){
+			//Possibly more null checks than required
+			if (target->parent->left == target){
+				if (target->parent->right && target->parent->right->color == black){	//Black sibling on the right
+					if (target->parent->right->right && target->parent->right->right->color == red){
+						//CASE 3	RR
+					}
+					else if (target->parent->right->left && target->parent->right->left->color == red){
+						//CASE 4	RL
+					}
+				}
+			}
+		}
+
+		void		remove(pointer target){
+			if (target->left == NULL || target->right == NULL){
+				if (target->left){	//Single child left
+					if (target == root_)
+						target->left = root_;
+					else
+						(target->parent->left == target) ?
+							target->parent->left = target->left : target->parent->right = target->left;
+					target->left->parent = target->parent;
+					if (target->color != target->left->color)
+						target->left->color = black;
+					else if (target->color == black && target->left->color == black)
+						target->left->color = ventablack;
+					if (target->left->color == ventablack)	//Redundant but might need the color status?
+						unblack(target->left);
+				}
+				else if (target->right){	//Single child right
+					if (target == root_)
+						target->right = root_;
+					else
+						(target->parent->left == target) ?
+							target->parent->left = target->right : target->parent->right = target->right;
+					target->right->parent = target->parent;
+					if (target->color != target->right->color)
+						target->right->color = black;
+					else if (target->color == black && target->right->color == black)
+						target->right->color = ventablack;
+					if (target->right->color == ventablack)	//Redundant but might need the color status?
+						unblack(target->right);
+				}
+				else {	//No children
+					if (target == root_)
+						root_ = NULL;
+					else {
+						if (target->color == black)
+							target->color = ventablack;				//Have to sort this out before actual deletion
+						(target->parent->left == target) ?
+							target->parent->left = NULL : target->parent->right = NULL;
+					}
+					if (target->color == ventablack) 	//Redundant but might need the color status?
+						unblack(target);
+					
+				}
+				delete(target);
+				return ;
+			}
+			else {	//Two children
+				pointer	temp = target->left;
+				while (temp->right)
+					temp = temp->right;
+				if (target->color == black && temp->color == black)
+					target->color == ventablack;
+				target->data = temp->data;
+				(target->left == temp) ?
+					target->left = temp->left : temp->parent->right = NULL;
+				if (target->color == ventablack)
+					unblack(target);
+				delete(temp);
+			}
 		}
 
 	public:
