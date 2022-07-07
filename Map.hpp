@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 01:01:44 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/06 21:27:01 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/07 15:10:57 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,63 +65,35 @@ class tree
 		}
 
 		void		leftRotate(pointer target){
-			// std::cout << "\n\n\nPre rotate:\n";
-			// printTree();
-			// std::cout << "Left rotating target: " << target->data.first << "\n";
-			if (!target->parent)
-				root_ = target->right;
-			else if (target->parent->left == target){
-				if (target->right)
-					target->parent->left = target->right;
-				else if (target->left)
-					std::cout << "Should be doing right rotate in this case?\n";
-					// target->parent->left = target->left;
+			pointer temp = target->right;
+			if (target->parent){
+				(target->parent->left == target) ?
+					target->parent->left = temp : target->parent->right = temp;
 			}
-			else {
-				if (target->right)
-					target->parent->right = target->right;
-				else if (target->left)
-					std::cout << "Should be doing right rotate in this case?\n";
-					// target->parent->right = target->left;
-			}
-			target->right->parent = target->parent;	//right’s parent becomes current’s parent
-			target->parent = target->right;			//current’s parent becomes right	//Left???
-			pointer	temp = target->right->left;
-			target->right->left = target;			//right’s left becomes current
-			target->right = temp;	//current’s right becomes right’s left
-			// std::cout << "Post rotate\n";
-			// printTree();
-			// std::cout << "\n\n\n\n\n";
+			else
+				root_ = temp;
+			temp->parent = target->parent;
+			target->right = temp->left;
+			if (target->right)
+				target->right->parent = target;
+			temp->left = target;
+			target->parent = temp;
 		}
 
 		void		rightRotate(pointer target){
-			// std::cout << "\n\n\nPre rotate:\n";
-			// printTree();
-			// std::cout << "Right rotating target: " << target->data.first << "\n";
-			if (!target->parent)
-				root_ = target->left;
-			else if (target->parent->left == target){
-				if (target->right)
-					std::cout << "Should be doing left rotate in this case?\n";
-					// target->parent->left = target->right;
-				else if (target->left)
-					target->parent->left = target->left;
+			pointer temp = target->left;
+			if (target->parent){
+				(target->parent->left == target) ?
+					target->parent->left = temp : target->parent->right = temp;
 			}
-			else {
-				if (target->right)
-					std::cout << "Should be doing left rotate in this case?\n";
-					// target->parent->right = target->right;
-				else if (target->left)
-					target->parent->right = target->left;
-			}
-			target->left->parent = target->parent;	//left’s parent becomes current’s parent
-			target->parent = target->left;			//current’s parent becomes right
-			pointer	temp = target->left->right;
-			target->left->right = target;			//right’s left becomes current
-			target->left = temp;					//current’s right becomes right’s left
-			// std::cout << "Post rotate\n";
-			// printTree();
-			// std::cout << "\n\n\n\n\n";
+			else
+				root_ = temp;
+			temp->parent = target->parent;
+			target->left = temp->right;
+			if (target->left)
+				target->left->parent = target;
+			temp->right = target;
+			target->parent = temp;
 		}
 
 		void		balance(pointer target){
@@ -129,9 +101,6 @@ class tree
 				target->color = black;
 				return ;
 			}
-			// std::cout << "Target: " << target->data.first << "\n";
-			// std::cout << "Parent: " << target->parent->data.first << "\n";
-			// std::cout << "Color: " << target->parent->color << "\n";
 			if (target->parent->color == black)
 				return ;
 			if (target->parent->parent->left == target->parent){	//Parent is left child
@@ -159,9 +128,6 @@ class tree
 					target->parent->color = black;
 					target->parent->parent->left->color = black;
 					target->parent->parent->color = red;
-					std::cout << "Recoloring: " << "\n";
-					printTree();
-					std::cout << std::endl;
 					balance(target->parent->parent);
 					return ;
 				}
@@ -189,7 +155,7 @@ class tree
 				return ;
 			}
 			pointer	temp = root_;
-			while (val < temp->data && temp->left != NULL || val > temp->data && temp->right != NULL){
+			while ((val < temp->data && temp->left != NULL) || (val > temp->data && temp->right != NULL)){
 				while (val < temp->data && temp->left != NULL)
 					temp = temp->left;
 				while (val > temp->data && temp->right != NULL)
