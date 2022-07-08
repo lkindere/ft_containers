@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 01:01:44 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/08 17:57:11 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/08 22:55:00 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,11 +106,13 @@ class tree
 						target->parent->color = black;
 						target->parent->parent->right->color = black;
 						target->parent->parent->color = red;
+						target = target->parent->parent;
 						continue ;
 					}
 					if ((!target->parent->parent->right) || target->parent->parent->right->color == black){
 						if (target->parent->right == target){
 							leftRotate(target->parent);
+							target = target->left;
 							continue ;
 						}
 						target->parent->color = black;
@@ -124,11 +126,13 @@ class tree
 						target->parent->color = black;
 						target->parent->parent->left->color = black;
 						target->parent->parent->color = red;
+						target = target->parent->parent;
 						continue ;
 					}
 					if ((!target->parent->parent->left) || target->parent->parent->left->color == black){
 						if (target->parent->left == target){
 							rightRotate(target->parent);
+							target = target->right;
 							continue ;
 						}
 						target->parent->color = black;
@@ -148,74 +152,72 @@ class tree
 		}
 
 		void		unblack(pointer target){
-			if (target == root_)
-				return ;
-			if (target->parent->left == target){	//S is on the right
-				if (!target->parent->right){
-					unblack(target->parent);
-					return ;
+			pointer	parent = target->parent;
+			while (target->parent){
+				if (target->parent->left == target){
+					if (target->parent->right->color == red){
+						target->parent->color = red;
+						target->parent->right->color = black;
+						leftRotate(target->parent);
+						continue ;
+					}
+					if (target->parent->right->right && target->parent->right->right->color == red){
+						target->parent->right->right->color = target->parent->right->color;
+						target->parent->right->color = target->parent->color;
+						target->parent->color = black;
+						leftRotate(target->parent);
+						return ;
+					}
+					if (target->parent->right->left && target->parent->right->left->color == red){
+						target->parent->right->left->color = target->parent->color;
+						target->parent->color = black;
+						rightRotate(target->parent->right);
+						leftRotate(target->parent);
+						return ;
+					}
+					target->parent->right->color = red;
+					if (target->parent->color == red){
+						target->parent->color = black;
+						return ;
+					}
+					target = target->parent;
 				}
-				if (target->parent->right->color == red){
-					target->parent->color = red;
-					target->parent->right->color = black;
-					leftRotate(target->parent);
+				else {
+					if (target->parent->left->color == red){
+						target->parent->color = red;
+						target->parent->left->color = black;
+						rightRotate(target->parent);
+						continue ;
+					}
+					if (target->parent->left->left && target->parent->left->left->color == red){
+						target->parent->left->left->color = target->parent->left->color;
+						target->parent->left->color = target->parent->color;
+						target->parent->color = black;
+						rightRotate(target->parent);
+						return ;
+					}
+					if (target->parent->left->right && target->parent->left->right->color == red){
+						target->parent->left->right->color = target->parent->color;
+						target->parent->color = black;
+						leftRotate(target->parent->left);
+						rightRotate(target->parent);
+						return ;
+					}
+					target->parent->left->color = red;
+					if (target->parent->color == red){
+						target->parent->color = black;
+						return ;
+					}
+					target = target->parent;
 				}
-				if (target->parent->right->right && target->parent->right->right->color == red){ // 		\ forms red
-					target->parent->right->right->color = target->parent->right->color;
-					target->parent->right->color = target->parent->color;
-					leftRotate(target->parent);
-					return ;
-				}
-				if (target->parent->right->left && target->parent->right->left->color == red){	//			>	forms red
-					target->parent->right->left->color = target->parent->color;
-					rightRotate(target->parent->right);
-					leftRotate(target->parent);
-					return ;
-				}
-				// Both children black
-				target->parent->right->color = red;
-				if (target->parent->color == red){
-					target->parent->color = black;
-					return ;
-				}
-				unblack(target->parent);
 			}
-			else {	//S is on the left
-				if (!target->parent->left){
-					unblack(target->parent);
-					return ;
-				}
-				if (target->parent->left->color == red){
-					target->parent->color = red;
-					target->parent->left->color = black;
-					rightRotate(target->parent);
-				}
-				if (target->parent->left->left && target->parent->left->left->color == red){ // 		/ forms red
-					target->parent->left->left->color = target->parent->left->color;
-					target->parent->left->color = target->parent->color;
-					rightRotate(target->parent);
-					return ;
-				}
-				if (target->parent->left->right && target->parent->left->right->color == red){	//			<	forms red
-					target->parent->left->right->color = target->parent->color;
-					leftRotate(target->parent->left);
-					rightRotate(target->parent);
-					return ;
-				}
-				// Both children black
-				target->parent->left->color = red;
-				if (target->parent->color == red){
-					target->parent->color = black;
-					return ;
-				}
-				unblack(target->parent);
-			}
-
+			if (!target->parent)
+				target->color = black;
 		}
 
 		void		remove(pointer target){
 			if (target->left == NULL || target->right == NULL){
-				if (target->left){	//Single child left
+				if (target->left){
 					if (target == root_)
 						target->left = root_;
 					else
@@ -227,7 +229,7 @@ class tree
 					else if (target->color == black && target->left->color == black)
 						unblack(target->left);
 				}
-				else if (target->right){	//Single child right
+				else if (target->right){
 					if (target == root_)
 						target->right = root_;
 					else
@@ -239,7 +241,7 @@ class tree
 					else if (target->color == black && target->right->color == black)
 						unblack(target->right);
 				}
-				else {	//No children
+				else {
 					if (target == root_)
 						root_ = NULL;
 					else {
@@ -250,18 +252,13 @@ class tree
 					}
 				}
 				delete(target);
-				return ;
 			}
-			else {	//Two children
+			else {
 				pointer	temp = target->left;
 				while (temp->right)
 					temp = temp->right;
 				target->data = temp->data;
-				if (target->color == black && temp->color == black)
-					unblack(target);
-				(target->left == temp) ?
-					target->left = temp->left : temp->parent->right = NULL;
-				delete(temp);
+				remove(temp);
 			}
 		}
 
