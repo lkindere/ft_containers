@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 12:50:48 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/08 23:04:30 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/09 00:23:19 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,12 @@
 #include <iostream>
 #include <vector>
 
+#include <cstdlib>
+
 int	main(void)
 {
 	srand(time(NULL));
-	ft::tree<int, ft::pair<int, float> >	tree;
+	tree<int, ft::pair<int, float> >	tree;
 
 	//    CASE / \ CASE
 
@@ -41,7 +43,7 @@ int	main(void)
 	// 	tree.printTree();
 	// 	std::cout << "\n\n";
 
-	// 	tree.remove(tree.root_->left->right->left);
+	// 	tree.remove(tree.root_->left);
 	// 	tree.printTree();
 	// 	std::cout << "\n\n";
 	// }
@@ -66,7 +68,7 @@ int	main(void)
 	// 	tree.printTree();
 	// 	std::cout << "\n\n";
 
-	// 	tree.remove(tree.root_->left->right->right);
+	// 	tree.remove(tree.root_->right);
 	// 	tree.printTree();
 	// 	std::cout << "\n\n";
 	// }
@@ -91,7 +93,7 @@ int	main(void)
 	// 	tree.printTree();
 	// 	std::cout << "\n\n";
 
-	// 	tree.remove(tree.root_->left->right->left);
+	// 	tree.remove(tree.root_->left);
 	// 	tree.printTree();
 	// 	std::cout << "\n\n";
 	// }
@@ -112,7 +114,7 @@ int	main(void)
 	// 	tree.printTree();
 	// 	std::cout << "\n\n";
 
-	// 	tree.remove(tree.root_->left->right->right);
+	// 	tree.remove(tree.root_->right);
 	// 	tree.printTree();
 	// 	std::cout << "\n\n";
 	// }
@@ -131,7 +133,7 @@ int	main(void)
 	// 	tree.printTree();
 	// 	std::cout << "\n\n";
 
-	// 	tree.remove(tree.root_->left->right->left);
+	// 	tree.remove(tree.root_->left);
 	// 	tree.printTree();
 	// }
 
@@ -155,7 +157,7 @@ int	main(void)
 	// 	tree.printTree();
 	// 	std::cout << "\n\n";
 
-	// 	tree.remove(tree.root_->left->right->left);
+	// 	tree.remove(tree.root_->left);
 	// 	tree.printTree();
 	// }
 
@@ -170,19 +172,19 @@ int	main(void)
 	// tree.insertNode(ft::make_pair(14, 50.3));
 	// tree.insertNode(ft::make_pair(10, 50.3));
 
-	// tree.remove(tree.root_->left->right->right);
-	// tree.remove(tree.root_->left->right->right);
+	// tree.remove(tree.root_->right);
+	// tree.remove(tree.root_->right);
 	// tree.printTree();
 	// std::cout << "\n\n";
 
-	// tree.remove(tree.root_->left->right->right);
+	// tree.remove(tree.root_->right);
 	// tree.printTree();
 	// std::cout << "\n\n";
 
 	std::vector<int>			vec;
 	std::vector<int>::iterator	it;
 	bool						dup;
-	for (int i = 0; i < 25; ++i){
+	for (int i = 0; i < 7; ++i){
 		int	rng = rand() % 20;
 		dup = false;
 		for (it = vec.begin(); it != vec.end(); ++it){
@@ -194,37 +196,24 @@ int	main(void)
 			std::cout << "Inserting " << rng << std::endl;
 			tree.insertNode(ft::make_pair(rng, 5.5));
 		}
+		else
+			--i;
 	}
 	tree.printTree();
-	std::cout << "\n\n";
-
-	tree.remove(tree.root_->left->right);
+	tree.remove(tree.root_);
 	tree.printTree();
-	std::cout << "\n\n\n";
-
-	tree.remove(tree.root_->left->right);
+	tree.remove(tree.root_);
 	tree.printTree();
-	std::cout << "\n\n\n";
-
-	tree.remove(tree.root_->left->right);
+	tree.remove(tree.root_);
 	tree.printTree();
-	std::cout << "\n\n\n";
-
-	tree.remove(tree.root_->left->right);
+	tree.remove(tree.root_);
 	tree.printTree();
-	std::cout << "\n\n\n";
-
-	tree.remove(tree.root_->left->right);
+	tree.remove(tree.root_);
 	tree.printTree();
-	std::cout << "\n\n\n";
-
-	tree.remove(tree.root_->left->right);
+	tree.remove(tree.root_);
 	tree.printTree();
-	std::cout << "\n\n\n";
+	tree.remove(tree.root_);
 
-	tree.remove(tree.root_->left->right);
-	tree.printTree();
-	std::cout << "\n\n\n";
 	system("leaks a.out");
 	return 0;
 }
