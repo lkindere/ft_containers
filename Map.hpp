@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 01:01:44 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/07 18:04:51 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/08 17:57:11 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,11 @@
 
 #include <iostream>
 
+enum e_color {red, black};
+enum e_pos {left, right};
+
 namespace ft {
 
-enum e_color {red, black, ventablack};
-enum e_pos {left, right};
 
 template <class T>
 struct node
@@ -147,17 +148,69 @@ class tree
 		}
 
 		void		unblack(pointer target){
-			//Possibly more null checks than required
-			if (target->parent->left == target){
-				if (target->parent->right && target->parent->right->color == black){	//Black sibling on the right
-					if (target->parent->right->right && target->parent->right->right->color == red){
-						//CASE 3	RR
-					}
-					else if (target->parent->right->left && target->parent->right->left->color == red){
-						//CASE 4	RL
-					}
+			if (target == root_)
+				return ;
+			if (target->parent->left == target){	//S is on the right
+				if (!target->parent->right){
+					unblack(target->parent);
+					return ;
 				}
+				if (target->parent->right->color == red){
+					target->parent->color = red;
+					target->parent->right->color = black;
+					leftRotate(target->parent);
+				}
+				if (target->parent->right->right && target->parent->right->right->color == red){ // 		\ forms red
+					target->parent->right->right->color = target->parent->right->color;
+					target->parent->right->color = target->parent->color;
+					leftRotate(target->parent);
+					return ;
+				}
+				if (target->parent->right->left && target->parent->right->left->color == red){	//			>	forms red
+					target->parent->right->left->color = target->parent->color;
+					rightRotate(target->parent->right);
+					leftRotate(target->parent);
+					return ;
+				}
+				// Both children black
+				target->parent->right->color = red;
+				if (target->parent->color == red){
+					target->parent->color = black;
+					return ;
+				}
+				unblack(target->parent);
 			}
+			else {	//S is on the left
+				if (!target->parent->left){
+					unblack(target->parent);
+					return ;
+				}
+				if (target->parent->left->color == red){
+					target->parent->color = red;
+					target->parent->left->color = black;
+					rightRotate(target->parent);
+				}
+				if (target->parent->left->left && target->parent->left->left->color == red){ // 		/ forms red
+					target->parent->left->left->color = target->parent->left->color;
+					target->parent->left->color = target->parent->color;
+					rightRotate(target->parent);
+					return ;
+				}
+				if (target->parent->left->right && target->parent->left->right->color == red){	//			<	forms red
+					target->parent->left->right->color = target->parent->color;
+					leftRotate(target->parent->left);
+					rightRotate(target->parent);
+					return ;
+				}
+				// Both children black
+				target->parent->left->color = red;
+				if (target->parent->color == red){
+					target->parent->color = black;
+					return ;
+				}
+				unblack(target->parent);
+			}
+
 		}
 
 		void		remove(pointer target){
@@ -172,8 +225,6 @@ class tree
 					if (target->color != target->left->color)
 						target->left->color = black;
 					else if (target->color == black && target->left->color == black)
-						target->left->color = ventablack;
-					if (target->left->color == ventablack)	//Redundant but might need the color status?
 						unblack(target->left);
 				}
 				else if (target->right){	//Single child right
@@ -186,8 +237,6 @@ class tree
 					if (target->color != target->right->color)
 						target->right->color = black;
 					else if (target->color == black && target->right->color == black)
-						target->right->color = ventablack;
-					if (target->right->color == ventablack)	//Redundant but might need the color status?
 						unblack(target->right);
 				}
 				else {	//No children
@@ -195,13 +244,10 @@ class tree
 						root_ = NULL;
 					else {
 						if (target->color == black)
-							target->color = ventablack;				//Have to sort this out before actual deletion
+							unblack(target);
 						(target->parent->left == target) ?
 							target->parent->left = NULL : target->parent->right = NULL;
 					}
-					if (target->color == ventablack) 	//Redundant but might need the color status?
-						unblack(target);
-					
 				}
 				delete(target);
 				return ;
@@ -210,13 +256,11 @@ class tree
 				pointer	temp = target->left;
 				while (temp->right)
 					temp = temp->right;
-				if (target->color == black && temp->color == black)
-					target->color == ventablack;
 				target->data = temp->data;
+				if (target->color == black && temp->color == black)
+					unblack(target);
 				(target->left == temp) ?
 					target->left = temp->left : temp->parent->right = NULL;
-				if (target->color == ventablack)
-					unblack(target);
 				delete(temp);
 			}
 		}

@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 12:50:48 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/07 19:12:27 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/08 17:56:38 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,97 +14,149 @@
 #include <iostream>
 #include <vector>
 
-/*
-																			P
-
-													SIBLING IS ON THE LEFT
-		
-														HAS RED CHILD
-													<					>
-									RED IS LEFT								RED IS RIGHT
-		/ case RR(P)																				< case	RR(S)	LR(P)
-		S color = P color																					S->left color = P color
-	S->left color = S color
-					
-
-
-
-												P
-
-													SIBLING IS ON THE RIGHT
-		
-														HAS RED CHILD
-													<					>
-									RED IS LEFT								RED IS RIGHT
-																								\ case LR(P)
-			<	RR(S) 	LR(P)
-			S->right color = P color																	S color = P color
-																							S->right color = S color
-
-
-
-
-																			P
-													SIBLING IS ON THE LEFT 
-													HAS NO RED CHILD
-													LR(S)	RR(P)	
-
-
-												P	
-													SIBLING IS ON THE RIGHT
-													HAS NO RED CHILD
-														LR(P)
-
-
-											S HAS 2 BLACK CHILDREN RECOLOR S TO RED
-														REPEAT FROM P
-										P																			P
-
-								LR(P)			S IS RED and right									S IS RED and left			RR(P)
-																		
-
-
-																P IS RED				NEW S IS BLACK
-										
-													
-																	
-*/
-
-
 int	main(void)
 {
 	srand(time(NULL));
 	ft::tree<int, ft::pair<int, float> >	tree;
 
-	// {
-	// 	std::cout << "S is right of P, red is right"
-	// 	tree.root_ = tree.allocNode(ft::make_pair(30, 5.5));
-	// 	tree.root_->right = tree.allocNode(ft::make_pair(40, 5.5), tree.root_);
-	// 	tree.root_->right->left = tree.allocNode(ft::make_pair(35, 5.5), tree.root_->right);
-	// 	tree.root_->right->right = tree.allocNode(ft::make_pair(50, 5.5), tree.root_->right);
-	// 	tree.printTree();
-	// 	std::cout << "\n\n";
+	//    CASE / \ CASE
 
-	// 	tree.leftRotate(tree.root_);
-	// 	tree.printTree();
-	// 	std::cout << "\n\n";
-	// }
+	{	//Seems functional
+		std::cout << "S is right of P, red is right \\ \n";
+		tree.root_ = tree.allocNode(ft::make_pair(30, 5.5));
+		tree.root_->color = black;
 
-	// {
-	// 	std::cout << "S is right of P, red is left";
-	// 	tree.root_ = tree.allocNode(ft::make_pair(30, 5.5));
-	// 	tree.root_->right = tree.allocNode(ft::make_pair(40, 5.5), tree.root_);
-	// 	tree.root_->right->left = tree.allocNode(ft::make_pair(35, 5.5), tree.root_->right);
-	// 	tree.printTree();
-	// 	std::cout << "\n\n";
+		tree.root_->left = tree.allocNode(ft::make_pair(20, 5.5), tree.root_);
+		tree.root_->left->color = black;
 
-	// 	tree.rightRotate(tree.root_->right);
-	// 	tree.printTree();
-	// 	std::cout << "\n\n";
+		tree.root_->right = tree.allocNode(ft::make_pair(40, 5.5), tree.root_);
+		tree.root_->right->color = black;
+
+		tree.root_->right->left = tree.allocNode(ft::make_pair(35, 5.5), tree.root_->right);
+		tree.root_->right->left->color = red;
+
+		tree.root_->right->right = tree.allocNode(ft::make_pair(50, 5.5), tree.root_->right);
+		tree.root_->right->right->color = red;
+	
+		tree.printTree();
+		std::cout << "\n\n";
+
+		tree.remove(tree.root_->left);
+		tree.printTree();
+		std::cout << "\n\n";
+	}
+	{	//Seems functional
+		std::cout << "S is left of P, red is right / \n";
+		tree.root_ = tree.allocNode(ft::make_pair(30, 5.5));
+		tree.root_->color = black;
+
+		tree.root_->right = tree.allocNode(ft::make_pair(40, 5.5), tree.root_);
+		tree.root_->right->color = black;
+
+		tree.root_->left = tree.allocNode(ft::make_pair(15, 5.5), tree.root_);
+		tree.root_->left->color = black;
 		
-	// 	tree.leftRotate(tree.root_);
+		tree.root_->left->left = tree.allocNode(ft::make_pair(10, 5.5), tree.root_->left);
+		tree.root_->left->left->color = red;
+
+		tree.root_->left->right = tree.allocNode(ft::make_pair(20, 5.5), tree.root_->left);
+		tree.root_->left->right->color = red;
+
+	
+		tree.printTree();
+		std::cout << "\n\n";
+
+		tree.remove(tree.root_->right);
+		tree.printTree();
+		std::cout << "\n\n";
+	}
+
+		//	CASE < > CASE
+
+
+	{	//Seems functional
+		std::cout << "S is right of P, red is left > \n";
+		tree.root_ = tree.allocNode(ft::make_pair(30, 5.5));
+		tree.root_->color = black;
+
+		tree.root_->left = tree.allocNode(ft::make_pair(20, 5.5), tree.root_);
+		tree.root_->left->color = black;
+
+		tree.root_->right = tree.allocNode(ft::make_pair(40, 5.5), tree.root_);
+		tree.root_->right->color = black;
+
+		tree.root_->right->left = tree.allocNode(ft::make_pair(35, 5.5), tree.root_->right);
+		tree.root_->right->left->color = red;
+
+		tree.printTree();
+		std::cout << "\n\n";
+
+		tree.remove(tree.root_->left);
+		tree.printTree();
+		std::cout << "\n\n";
+	}
+	{	//Seems functional
+		std::cout << "S is left of P, red is left < \n";
+		tree.root_ = tree.allocNode(ft::make_pair(30, 5.5));
+		tree.root_->color = black;
+
+		tree.root_->left = tree.allocNode(ft::make_pair(20, 5.5), tree.root_);
+		tree.root_->left->color = black;
+
+		tree.root_->right = tree.allocNode(ft::make_pair(40, 5.5), tree.root_);
+		tree.root_->right->color = black;
+
+		tree.root_->left->right = tree.allocNode(ft::make_pair(25, 5.5), tree.root_->left);
+		tree.root_->left->right->color = red;
+
+		tree.printTree();
+		std::cout << "\n\n";
+
+		tree.remove(tree.root_->right);
+		tree.printTree();
+		std::cout << "\n\n";
+	}
+
+	{	//Seems functional
+		std::cout << "Both black recolor\n";
+		tree.root_ = tree.allocNode(ft::make_pair(20, 5.5));
+		tree.root_->color = black;
+
+		tree.root_->left = tree.allocNode(ft::make_pair(10, 5.5), tree.root_);
+		tree.root_->left->color = black;
+
+		tree.root_->right = tree.allocNode(ft::make_pair(30, 5.5), tree.root_);
+		tree.root_->right->color = black;
+
+		tree.printTree();
+		std::cout << "\n\n";
+
+		tree.remove(tree.root_->left);
+		tree.printTree();
+	}
+
+	// {	//Seems functional
+	// 	std::cout << "S is right of P, red is left\n";
+	// 	tree.root_ = tree.allocNode(ft::make_pair(20, 5.5));
+	// 	tree.root_->color = black;
+
+	// 	tree.root_->left = tree.allocNode(ft::make_pair(10, 5.5), tree.root_);
+	// 	tree.root_->left->color = black;
+
+	// 	tree.root_->right = tree.allocNode(ft::make_pair(30, 5.5), tree.root_);
+	// 	tree.root_->right->color = red;
+
+	// 	tree.root_->right->left = tree.allocNode(ft::make_pair(25, 5.5), tree.root_->right);
+	// 	tree.root_->right->left->color = black;
+
+	// 	tree.root_->right->right = tree.allocNode(ft::make_pair(35, 5.5), tree.root_->right);
+	// 	tree.root_->right->right->color = black;
+
 	// 	tree.printTree();
 	// 	std::cout << "\n\n";
+
+	// 	tree.remove(tree.root_->left);
+	// 	tree.printTree();
 	// }
 
 	
@@ -169,6 +221,6 @@ int	main(void)
 	// 	}
 	// }
 	// tree.printTree();
-	system("leaks a.out");
+	// system("leaks a.out");
 	return 0;
 }
