@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 23:12:27 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/10 19:58:26 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/11 00:57:25 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include "TreeIterator.hpp"
 
 
+
 #include <iostream>
 
 enum e_color {red, black};
@@ -25,13 +26,6 @@ enum e_color {red, black};
 template <class T>	//Key and data are the same
 struct node
 {
-	public:
-		typedef T 									value_type;
-		typedef T*									pointer;
-		typedef T&									reference;
-		typedef ptrdiff_t							difference_type;
-		typedef std::bidirectional_iterator_tag		iterator_category;
-
 	public:
 		T			data;
 		node*		left;
@@ -58,6 +52,9 @@ class tree
 		typedef Alloc										allocator_type;
 		typedef typename allocator_type::pointer			pointer;
 		typedef typename allocator_type::size_type			size_type;
+
+		typedef	TreeIterator<key_type, pointer> 			iterator;
+		typedef	TreeIterator<key_type, pointer> 			const_iterator;
 		
 	public: //Make private after testing
 		pointer				root_;
@@ -70,6 +67,20 @@ class tree
 	public:
 	tree() : root_(NULL) {} 
 	~tree() {}
+
+	iterator	begin()	{
+		pointer	ptr = root_;
+		while (ptr->left)
+			ptr = ptr->left;
+		return (iterator(ptr, false));
+	};
+
+	iterator	end() {
+		pointer	ptr = root_;
+		while (ptr->right)
+			ptr = ptr->right;
+		return iterator(ptr, true);
+	}
 
 	key_compare	key_comp() const { return comp; }
 
@@ -331,88 +342,88 @@ class tree
 
 
 
-		// void	printTree(){
-		// 	int	lines = 30;
-		// 	int	spaces = 20;
+		void	printTree(){
+			int	lines = 30;
+			int	spaces = 20;
 
-		// 	if (root_){	//Level 1
-		// 		for (int i = 0; i < lines + spaces / 2; ++i)
-		// 			std::cout << "-";
-		// 		std::cout << root_->data.first << "." << root_->color;
-		// 		for (int i = 0; i < lines; ++i)
-		// 			std::cout << "-";
-		// 		std::cout << std::endl;
-		// 	}
-		// 	else
-		// 		return ;
-		// 	{	//Level 2
-		// 		--lines; ++spaces;
-		// 		for (int i = 0; i < lines; ++i)
-		// 			std::cout << "-";
-		// 		(root_->left) ? std::cout << root_->left->data.first << "." << root_->left->color : std::cout << "**";
-		// 		for (int i = 0; i < spaces; ++i)
-		// 			std::cout << ' ';
-		// 		(root_->right) ? std::cout << root_->right->data.first << "." << root_->right->color : std::cout << "**";
-		// 		for (int i = 0; i < lines; ++i)
-		// 			std::cout << "-";
-		// 		std::cout << std::endl;
-		// 	}
-		// 	{	//Level 3
-		// 		lines /= 1.2; spaces /= 2;
-		// 		for (int i = 0; i < lines; ++i)
-		// 			std::cout << "-";
-		// 		(root_->left && root_->left->left) ? std::cout << root_->left->left->data.first << "." << root_->left->left->color : std::cout << "**";
-		// 		for (int i = 0; i < spaces; ++i)
-		// 			std::cout << ' ';
-		// 		(root_->left && root_->left->right) ? std::cout << root_->left->right->data.first << "." << root_->left->right->color : std::cout << "**";
-		// 		for (int i = 0; i < spaces; ++i)
-		// 			std::cout << ' ';
-		// 		(root_->right && root_->right->left) ? std::cout << root_->right->left->data.first << "." << root_->right->left->color : std::cout << "**";
-		// 		for (int i = 0; i < spaces; ++i)
-		// 			std::cout << ' ';
-		// 		(root_->right && root_->right->right) ? std::cout << root_->right->right->data.first << "." << root_->right->right->color : std::cout << "**";
-		// 		for (int i = 0; i < lines; ++i)
-		// 			std::cout << "-";
-		// 		std::cout << std::endl;
-		// 	}
-		// 	{	//Level 4
-		// 		lines /= 1.1; spaces /= 2;
-		// 		for (int i = 0; i < lines; ++i)
-		// 			std::cout << "-";
-		// 		(root_->left && root_->left->left && root_->left->left->left) ? std::cout << root_->left->left->left->data.first << "." << root_->left->left->left->color
-		// 			: std::cout << "**";
-		// 		for (int i = 0; i < spaces; ++i)
-		// 			std::cout << ' ';
-		// 		(root_->left && root_->left->left && root_->left->left->right) ? std::cout << root_->left->left->right->data.first << "." << root_->left->left->right->color
-		// 			: std::cout << "**";
-		// 		for (int i = 0; i < spaces - 2; ++i)
-		// 			std::cout << ' ';
-		// 		(root_->left && root_->left->right && root_->left->right->left) ? std::cout << root_->left->right->left->data.first << "." << root_->left->right->left->color
-		// 			: std::cout << "**";
-		// 		for (int i = 0; i < spaces; ++i)
-		// 			std::cout << ' ';
-		// 		(root_->left && root_->left->right && root_->left->right->right) ? std::cout << root_->left->right->right->data.first << "." << root_->left->right->right->color
-		// 			: std::cout << "**";
-		// 		for (int i = 0; i < spaces - 2; ++i)
-		// 			std::cout << ' ';
-		// 		(root_->right && root_->right->left && root_->right->left->left) ? std::cout << root_->right->left->left->data.first << "." << root_->right->left->left->color
-		// 			: std::cout << "**";
-		// 		for (int i = 0; i < spaces; ++i)
-		// 			std::cout << ' ';
-		// 		(root_->right && root_->right->left && root_->right->left->right) ? std::cout << root_->right->left->right->data.first << "." << root_->right->left->right->color
-		// 			: std::cout << "**";
-		// 		for (int i = 0; i < spaces; ++i)
-		// 			std::cout << ' ';
-		// 		(root_->right && root_->right->right && root_->right->right->left) ? std::cout << root_->right->right->left->data.first << "." << root_->right->right->left->color
-		// 			: std::cout << "**";
-		// 		for (int i = 0; i < spaces; ++i)
-		// 			std::cout << ' ';
-		// 		(root_->right && root_->right->right && root_->right->right->right) ? std::cout << root_->right->right->right->data.first << "." << root_->right->right->right->color
-		// 			: std::cout << "**";
-		// 		for (int i = 0; i < lines; ++i)
-		// 			std::cout << "-";
-		// 		std::cout << std::endl;
-		// 	}
+			if (root_){	//Level 1
+				for (int i = 0; i < lines + spaces / 2; ++i)
+					std::cout << "-";
+				std::cout << root_->data << "." << root_->color;
+				for (int i = 0; i < lines; ++i)
+					std::cout << "-";
+				std::cout << std::endl;
+			}
+			else
+				return ;
+			{	//Level 2
+				--lines; ++spaces;
+				for (int i = 0; i < lines; ++i)
+					std::cout << "-";
+				(root_->left) ? std::cout << root_->left->data << "." << root_->left->color : std::cout << "**";
+				for (int i = 0; i < spaces; ++i)
+					std::cout << ' ';
+				(root_->right) ? std::cout << root_->right->data << "." << root_->right->color : std::cout << "**";
+				for (int i = 0; i < lines; ++i)
+					std::cout << "-";
+				std::cout << std::endl;
+			}
+			{	//Level 3
+				lines /= 1.2; spaces /= 2;
+				for (int i = 0; i < lines; ++i)
+					std::cout << "-";
+				(root_->left && root_->left->left) ? std::cout << root_->left->left->data << "." << root_->left->left->color : std::cout << "**";
+				for (int i = 0; i < spaces; ++i)
+					std::cout << ' ';
+				(root_->left && root_->left->right) ? std::cout << root_->left->right->data << "." << root_->left->right->color : std::cout << "**";
+				for (int i = 0; i < spaces; ++i)
+					std::cout << ' ';
+				(root_->right && root_->right->left) ? std::cout << root_->right->left->data << "." << root_->right->left->color : std::cout << "**";
+				for (int i = 0; i < spaces; ++i)
+					std::cout << ' ';
+				(root_->right && root_->right->right) ? std::cout << root_->right->right->data << "." << root_->right->right->color : std::cout << "**";
+				for (int i = 0; i < lines; ++i)
+					std::cout << "-";
+				std::cout << std::endl;
+			}
+			{	//Level 4
+				lines /= 1.1; spaces /= 2;
+				for (int i = 0; i < lines; ++i)
+					std::cout << "-";
+				(root_->left && root_->left->left && root_->left->left->left) ? std::cout << root_->left->left->left->data << "." << root_->left->left->left->color
+					: std::cout << "**";
+				for (int i = 0; i < spaces; ++i)
+					std::cout << ' ';
+				(root_->left && root_->left->left && root_->left->left->right) ? std::cout << root_->left->left->right->data << "." << root_->left->left->right->color
+					: std::cout << "**";
+				for (int i = 0; i < spaces - 2; ++i)
+					std::cout << ' ';
+				(root_->left && root_->left->right && root_->left->right->left) ? std::cout << root_->left->right->left->data << "." << root_->left->right->left->color
+					: std::cout << "**";
+				for (int i = 0; i < spaces; ++i)
+					std::cout << ' ';
+				(root_->left && root_->left->right && root_->left->right->right) ? std::cout << root_->left->right->right->data << "." << root_->left->right->right->color
+					: std::cout << "**";
+				for (int i = 0; i < spaces - 2; ++i)
+					std::cout << ' ';
+				(root_->right && root_->right->left && root_->right->left->left) ? std::cout << root_->right->left->left->data << "." << root_->right->left->left->color
+					: std::cout << "**";
+				for (int i = 0; i < spaces; ++i)
+					std::cout << ' ';
+				(root_->right && root_->right->left && root_->right->left->right) ? std::cout << root_->right->left->right->data << "." << root_->right->left->right->color
+					: std::cout << "**";
+				for (int i = 0; i < spaces; ++i)
+					std::cout << ' ';
+				(root_->right && root_->right->right && root_->right->right->left) ? std::cout << root_->right->right->left->data << "." << root_->right->right->left->color
+					: std::cout << "**";
+				for (int i = 0; i < spaces; ++i)
+					std::cout << ' ';
+				(root_->right && root_->right->right && root_->right->right->right) ? std::cout << root_->right->right->right->data << "." << root_->right->right->right->color
+					: std::cout << "**";
+				for (int i = 0; i < lines; ++i)
+					std::cout << "-";
+				std::cout << std::endl;
+			}
 
-		// }
+		}
 };

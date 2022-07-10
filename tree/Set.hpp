@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/10 01:49:44 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/10 19:47:49 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/11 00:55:25 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,19 @@ class set
 		typedef typename Alloc::const_reference		const_reference;
 		typedef ptrdiff_t							difference_type;
 		typedef	size_t					            size_type;
-		typedef	node<T>*							node_pointer;
-		typedef TreeIterator<node<T> >				iterator;
-		typedef TreeIterator<node<const T> >		const_iterator;
+
+	public:
+		typedef	tree<T>								tree;
+		typedef	std::allocator<node<T> >			node_allocator;
+		typedef	typename node_allocator::pointer	node_pointer;
+		typedef typename tree::iterator				iterator;
+		typedef typename tree::const_iterator		const_iterator;
 		// typedef RITER<iterator>						reverse_iterator;
 		// typedef RITER<const_iterator>				const_reverse_iterator;
 	
 	private:
 		key_compare		comp;
-		tree<T>			base_;
+		tree			base_;
 
 	public:
 		//																	Constructors
@@ -59,15 +63,10 @@ class set
 
 		//																	Iterators
 		
-		iterator		begin() {return iterator(base_.root_); }
-		const_iterator 	begin() const { return const_iterator(begin()); }
-		iterator 		end() {
-			node_pointer	ptr = base_.root_;
-			while (ptr->right)
-				ptr = ptr->right;
-			return iterator(ptr, true);
-		}
-		const_iterator 	end() const { return const_iterator(end()); }
+		iterator		begin() { return base_.begin(); }
+		const_iterator 	begin() const { return base_.begin(); }
+		iterator 		end() { return base_.end(); }
+		const_iterator 	end() const { return base_.end(); }
 		// reverse_iterator rbegin();
 		// const_reverse_iterator rbegin() const;
 		// reverse_iterator rend();

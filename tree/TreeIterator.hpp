@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 23:29:33 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/10 19:48:08 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/11 00:57:14 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,55 +14,46 @@
 
 #include "../Iterator.hpp"
 
-namespace	ft {
-
-template <typename _iter>
+template <typename T, typename N>
 class TreeIterator
 {		
 	public:
-		typedef	_iter*													node;
-		typedef typename ft::iterator_traits<_iter>::value_type 		value_type;
-		typedef typename ft::iterator_traits<_iter>::difference_type	difference_type;
-		typedef typename ft::iterator_traits<_iter>::reference			reference;
-		typedef typename ft::iterator_traits<_iter>::pointer			pointer;
-   		typedef typename std::bidirectional_iterator_tag				iterator_category;
+		typedef	T											value_type;
+		typedef	N											node_pointer;										
+   		typedef typename std::bidirectional_iterator_tag	iterator_category;
 		
 	private:
-		node		ptr_;
-		bool		end_;
+		node_pointer	ptr_;
+		bool			end_;
 		
 	public:
-		//																	Constructors
-		TreeIterator(node root = nullptr, bool end = false) : ptr_(root), end_(end) {}
+																			// Constructors
+		TreeIterator(node_pointer root = nullptr, bool end = false) : ptr_(root), end_(end) {}
 
-		template <typename T>
-		TreeIterator(const TreeIterator<T>& iter) : ptr_(iter.base()), end_(iter.end()) {}
+		// template <typename T>
+		// TreeIterator(const TreeIterator<T>& iter) : ptr_(iter.base()), end_(iter.end()) {}
 
 		~TreeIterator() {}
 		
-		//																	Operators
-		template <typename T>
-		TreeIterator<pointer>&			operator=(const TreeIterator<T>& iter) { ptr_ = iter.base(); end_ = iter.end(); return (*this); }
+		// 																	// Operators
+		TreeIterator&					operator=(const TreeIterator& iter) { ptr_ = iter.base(); end_ = iter.end(); return (*this); }
 
-		template <typename Iter>
-		bool							operator==(const TreeIterator<Iter>& iter) const { return ((end_ && iter.end()) || ptr_ == iter.base()); }
-		template <typename Iter>
-		bool							operator!=(const TreeIterator<Iter>& iter) const { return (!operator==(iter)); }
+		bool							operator==(const TreeIterator& iter) const { return ((end_ == iter.end()) && ptr_ == iter.base()); }
+		bool							operator!=(const TreeIterator& iter) const { return (!operator==(iter)); }
 		
-		value_type&						operator*() { return (ptr_->data); }
-		const value_type&				operator*()	const { return (ptr_->data); }
-		pointer							operator->() const { return &(ptr_->data); }
+		const value_type				operator*()	const { return (ptr_->data); }
+		// node_pointer							operator->() const { return &(ptr_->data); }
 
-		TreeIterator<_iter>&			operator++() {
-			node	ptr = ptr_;
-			node	old	= ptr;
+		TreeIterator&			operator++() {
+			node_pointer	ptr = ptr_;
+			node_pointer	old	= ptr;
 			end_ = false;
 			while (ptr->right == NULL || ptr->right == old){
 				if (!ptr->parent){
 					end_ = true;
 					return (*this);
 				}
-				if (ptr->parent > ptr){
+				if (ptr->data < ptr->parent->data){
 					ptr_ = ptr->parent;
 					return (*this);
 				}
@@ -76,9 +67,9 @@ class TreeIterator
 			return (*this);
 		}
 
-		TreeIterator<_iter>&			operator--() {
-			node	ptr = ptr_;
-			node	old	= ptr;
+		TreeIterator&			operator--() {
+			node_pointer	ptr = ptr_;
+			node_pointer	old	= ptr;
 			if (end_){
 				end_ = false;
 				return (*this);
@@ -88,7 +79,7 @@ class TreeIterator
 					// end_ = true;
 					return (*this);
 				}
-				if (ptr->parent < ptr){
+				if (ptr->parent->data < ptr->data){				//Tree compare? same for other 3
 					ptr_ = ptr->parent;
 					return (*this);
 				}
@@ -102,17 +93,17 @@ class TreeIterator
 			return (*this);
 		}
 
-		TreeIterator<_iter>			operator++(int) {
-			TreeIterator<_iter>	it = (*this);
-			node	ptr = ptr_;
-			node	old	= ptr;
+		TreeIterator			operator++(int) {
+			TreeIterator	it = (*this);
+			node_pointer	ptr = ptr_;
+			node_pointer	old	= ptr;
 			end_ = false;
 			while (ptr->right == NULL || ptr->right == old){
 				if (!ptr->parent){
 					end_ = true;
 					return (it);
 				}
-				if (ptr->parent > ptr){
+				if (ptr->parent->data > ptr->data){
 					ptr_ = ptr->parent;
 					return (it);
 				}
@@ -126,10 +117,10 @@ class TreeIterator
 			return (it);
 		}
 
-		TreeIterator<_iter>			operator--(int) {
-			TreeIterator<_iter>	it = (*this);
-			node	ptr = ptr_;
-			node	old	= ptr;
+		TreeIterator			operator--(int) {
+			TreeIterator	it = (*this);
+			node_pointer	ptr = ptr_;
+			node_pointer	old	= ptr;
 			if (end_){
 				end_ = false;
 				return it;
@@ -139,7 +130,7 @@ class TreeIterator
 					// end_ = true;
 					return it;
 				}
-				if (ptr->parent < ptr){
+				if (ptr->parent->data < ptr->data){
 					ptr_ = ptr->parent;
 					return it;
 				}
@@ -153,8 +144,6 @@ class TreeIterator
 			return it;
 		}
 
-		node 	base() const { return ptr_; }
+		node_pointer 	base() const { return ptr_; }
 		bool	end() const { return end_; }
 };
-
-}

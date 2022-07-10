@@ -6,14 +6,20 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 12:50:48 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/10 19:49:03 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/11 00:54:04 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <iostream>
-#include <vector>
-#include <map>
-#include <set>
+// #include <iostream>
+// #include <vector>
+// #include <map>
+// #include <set>
+
+// #include "Set.hpp"
+
+#include <unistd.h>
+
+#include "RBTree.hpp"
 
 #include "Set.hpp"
 
@@ -21,28 +27,79 @@ int	main(void)
 {
 	srand(time(NULL));
 	
-	ft::set<int>			set;
-	std::set<int>			std;
+	// tree<int>					t;
 
+
+	ft::set<int>	whatever;
+
+
+	whatever.insert(10);
+
+	whatever.insert(23623);
+
+	for (ft::set<int>::iterator	it = whatever.begin(); it != whatever.end(); ++it)
+		std::cout << *it << std::endl;
+
+	// t.insert(150);
+
+	// t.insert(3);
+
+	// t.insert(15);
+
+	// t.insert(23623);
+	
+	// t.insert(10);
+
+	// tree<int>::iterator			it = t.begin();
+
+
+	// t.printTree();
+
+	// for (;it != t.end(); ++it){
+	// 	std::cout << *it << std::endl;
+	// 	// std::cout << it.end() << std::endl;
+	// }
+
+
+
+
+	// tree<int>::iterator
+	
+	// tree.insert(50);
+
+	// std::cout << typeid(tree<int>::iterator).name();
+
+	// ft::set<int>			set;
+	// std::set<int>			std;
 
 	// ft::set<int>::value_compare comp = set.value_comp();
 
 	// std::cout << comp(10, 10);
 
-	set.insert(5);
-	set.insert(10);
-	set.insert(15);
-	set.insert(20);
-	set.insert(30);
-	set.insert(35);
-		set.insert(50);
-	set.insert(55);
-	set.insert(60);
-	set.insert(65);
-		set.insert(70);
-	set.insert(75);
+	// node<int>::value_type	vt;
 
-	std::cout << (set.find(56) == set.end()) << std::endl;
+	// std::cout << typeid(vt).name() << std::endl;
+
+
+	// set.insert(5);
+
+	// ft::set<int>::iterator	it = set.begin();
+
+	// std::cout << *it;
+	
+	// set.insert(10);
+	// set.insert(15);
+	// set.insert(20);
+	// set.insert(30);
+	// set.insert(35);
+	// 	set.insert(50);
+	// set.insert(55);
+	// set.insert(60);
+	// set.insert(65);
+	// 	set.insert(70);
+	// set.insert(75);
+
+	// std::cout << (set.find(56) == set.end()) << std::endl;
 
 	// ft::set<int>::iterator	it = set.begin();
 
