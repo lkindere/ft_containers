@@ -6,20 +6,80 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 12:50:48 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/09 00:23:19 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/10 02:26:08 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Map.hpp"
 #include <iostream>
 #include <vector>
+#include <map>
+#include <set>
 
-#include <cstdlib>
+#include "Set.hpp"
 
 int	main(void)
 {
 	srand(time(NULL));
-	tree<int, ft::pair<int, float> >	tree;
+	ft::set<int>	set;
+
+	set.insert(5);
+		set.insert(10);
+	ft::set<int>::iterator	it = set.begin();
+
+	std::cout << *it << std::endl;
+	std::cout << *++it << std::endl;
+
+	// tree.insertNode(5);
+	// tree.insertNode(10);
+	// tree.insertNode(15);
+
+	// ft::TreeIterator<node<int> >	it(tree.root_);
+	// ft::TreeIterator<node<int> >	it2(tree.root_);
+
+	// std::cout << typeid(node<int>::iterator_category).name();
+	
+
+	// std::cout << *it++ << std::endl;
+	// std::cout << *it++ << std::endl;
+	// std::cout << *it++ << std::endl;
+	// std::cout << *it++ << std::endl;
+
+
+	// std::cout << "\n\n";
+	// std::cout << (it == it2) << std::endl;
+	// std::cout << "\n\n";
+
+	// std::cout << *it-- << std::endl;
+	// std::cout << *it-- << std::endl;
+	// std::cout << *it-- << std::endl;
+	// std::cout << *it-- << std::endl;
+
+
+	// std::set<int>	set;
+
+	// set.insert(5);
+	// set.insert(10);
+	// set.insert(15);
+
+	// std::set<int>::iterator	sit(set.begin());
+
+	// std::cout << *sit << std::endl;
+	// ++sit;
+	// 	std::cout << *sit << std::endl;
+	// 	++sit;
+	// 		std::cout << *sit << std::endl;
+	// 	++sit;
+	// 		std::cout << *sit << std::endl;
+
+	// std::cout << tree.find(5) << std::endl;
+
+	// ft::pair<int, float>	stuff1 = ft::make_pair(3, 6.5);
+	// ft::pair<int, float>	stuff2 = ft::make_pair(1, 6.5);
+	// ft::node<int>		wat;
+
+
+	// std::less<
 
 	//    CASE / \ CASE
 
@@ -181,39 +241,39 @@ int	main(void)
 	// tree.printTree();
 	// std::cout << "\n\n";
 
-	std::vector<int>			vec;
-	std::vector<int>::iterator	it;
-	bool						dup;
-	for (int i = 0; i < 7; ++i){
-		int	rng = rand() % 20;
-		dup = false;
-		for (it = vec.begin(); it != vec.end(); ++it){
-			if (*it == rng)
-				dup = true;
-		}
-		if (!dup){
-			vec.push_back(rng);
-			std::cout << "Inserting " << rng << std::endl;
-			tree.insertNode(ft::make_pair(rng, 5.5));
-		}
-		else
-			--i;
-	}
-	tree.printTree();
-	tree.remove(tree.root_);
-	tree.printTree();
-	tree.remove(tree.root_);
-	tree.printTree();
-	tree.remove(tree.root_);
-	tree.printTree();
-	tree.remove(tree.root_);
-	tree.printTree();
-	tree.remove(tree.root_);
-	tree.printTree();
-	tree.remove(tree.root_);
-	tree.printTree();
-	tree.remove(tree.root_);
+	// std::set<int>				set;
+	// std::vector<int>			vec;
+	// std::vector<int>::iterator	it;
+	// bool						dup;
+	// for (int i = 0; i < 5; ++i){
+	// 	int	rng = rand() % 100;
+	// 	dup = false;
+	// 	for (it = vec.begin(); it != vec.end(); ++it){
+	// 		if (*it == rng)
+	// 			dup = true;
+	// 	}
+	// 	if (!dup){
+	// 		vec.push_back(rng);
+	// 		set.insert(rng);
+	// 	}
+	// 	else
+	// 		--i;
+	// }
 
-	system("leaks a.out");
+	// for (std::set<int>::iterator	it = set.begin(); it != set.end(); ++it){
+	// 	std::cout << *it << std::endl;
+	// }
+
+	// std::cout << "\n\n\n\n";
+
+	// for (it = vec.begin(); it != vec.end(); ++it)
+	// 	std::cout << *it << std::endl;
+
+	// 		std::cout << "\n\n\n\n";
+
+	// 	std::cout << &(*(set.end())) << std::endl;
+	// 	std::cout << &(*(--set.end())) << "    " << *(--set.end()) << std::endl;
+	// 	std::cout << &(*(--(--set.end()))) << "    " << *(--(--set.end())) << std::endl;
+
 	return 0;
 }
