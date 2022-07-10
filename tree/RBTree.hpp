@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 23:12:27 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/10 03:09:41 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/10 19:58:26 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,10 @@ class tree
 	public:
 		typedef	T											value_type;
 		typedef	Key											key_type;
+		typedef Compare										key_compare;
 		typedef Alloc										allocator_type;
 		typedef typename allocator_type::pointer			pointer;
 		typedef typename allocator_type::size_type			size_type;
-	
-	public:
-		typedef	std::less<value_type>	value_compare;
 		
 	public: //Make private after testing
 		pointer				root_;
@@ -67,11 +65,13 @@ class tree
 		allocator_type		alloc_;
 	
 	public:
-		Compare						comp;
+		key_compare			comp;
 
 	public:
 	tree() : root_(NULL) {} 
 	~tree() {}
+
+	key_compare	key_comp() const { return comp; }
 
 	size_type	empty()	const { return (size_ == 0); }
 
@@ -93,15 +93,15 @@ class tree
 			return (ft::make_pair(root_, true));
 		}
 		pointer	temp = root_;
-		while ((val < temp->data && temp->left != NULL) || (val > temp->data && temp->right != NULL)){
-			while (val < temp->data && temp->left != NULL)
+		while ((comp(val, temp->data) && temp->left != NULL) || (comp(temp->data, val) && temp->right != NULL)){
+			while (comp(val, temp->data) && temp->left != NULL)
 				temp = temp->left;
-			while (val > temp->data && temp->right != NULL)
+			while (comp(temp->data, val) && temp->right != NULL)
 				temp = temp->right;
 		}
-		if (val == temp->data)
+		if ((!comp(val, temp->data)) && (!comp(temp->data, val)))
 			return (ft::make_pair(temp, false));
-		if (val < temp->data){
+		if (comp(val, temp->data)){
 			temp->left = allocNode(val, temp);
 			balance(temp->left);
 			return (ft::make_pair(temp->left, true));
@@ -318,21 +318,16 @@ class tree
 			}
 		}
 
-		// pointer	find(const key_type& key){
-		// 	pointer	temp;
-		// 	while (temp){
-		// 		while (comp(key, temp->getKey()) && temp->left)
-		// 			temp = temp->left;
-		// 		while (!comp(key, temp->getKey())){
-		// 			if (key == temp->getKey())
-		// 				return (temp->getData());
-		// 			if (temp->right)
-		// 				temp = temp->right;
-		// 			else
-		// 				return NULL;
-		// 		}
-		// 	}
-		// }
+		pointer	find(const key_type& key) const {
+			pointer	temp = root_;
+			while (temp && (comp(key, temp->getKey()) || comp(temp->getKey(), key))){
+				while (temp && comp(key, temp->getKey()))
+					temp = temp->left;
+				while (temp && comp(temp->getKey(), key))
+					temp = temp->right;
+			}
+			return temp;
+		}
 
 
 

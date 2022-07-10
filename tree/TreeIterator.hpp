@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 23:29:33 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/10 04:48:59 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/10 19:48:08 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,16 +33,7 @@ class TreeIterator
 		
 	public:
 		//																	Constructors
-		TreeIterator(node root = nullptr, bool end = false) : ptr_(root), end_(end) {
-			if (root){
-				if (end)
-					while (ptr_->right)
-						ptr_ = ptr_->right;
-				else
-					while (ptr_->left)
-						ptr_ = ptr_->left;
-			}
-		}
+		TreeIterator(node root = nullptr, bool end = false) : ptr_(root), end_(end) {}
 
 		template <typename T>
 		TreeIterator(const TreeIterator<T>& iter) : ptr_(iter.base()), end_(iter.end()) {}

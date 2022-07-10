@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 12:50:48 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/10 04:56:10 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/10 19:49:03 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,12 @@ int	main(void)
 	srand(time(NULL));
 	
 	ft::set<int>			set;
+	std::set<int>			std;
+
+
+	// ft::set<int>::value_compare comp = set.value_comp();
+
+	// std::cout << comp(10, 10);
 
 	set.insert(5);
 	set.insert(10);
@@ -31,20 +37,22 @@ int	main(void)
 	set.insert(35);
 		set.insert(50);
 	set.insert(55);
-	// set.insert(60);
-	// set.insert(65);
-	// 	set.insert(70);
-	// set.insert(75);
+	set.insert(60);
+	set.insert(65);
+		set.insert(70);
+	set.insert(75);
 
-	ft::set<int>::iterator	it = set.begin();
+	std::cout << (set.find(56) == set.end()) << std::endl;
 
-	std::cout << "Begin: " << *it << std::endl;
+	// ft::set<int>::iterator	it = set.begin();
 
-	for (; it != set.end(); ++it){
-		std::cout << *it << std::endl;
-		// std::cout << "Begin is: " << *set.begin() << std::endl;
-		set.erase(set.begin());
-	}
+	// std::cout << "Begin: " << *it << std::endl;
+
+	// for (; it != set.end(); ++it){
+	// 	std::cout << *it << std::endl;
+	// 	// std::cout << "Begin is: " << *set.begin() << std::endl;
+	// 	set.erase(set.begin());
+	// }
 
 	// std::cout << "\n\n";
 
