@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 23:12:27 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/11 05:36:58 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/11 18:07:34 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@
 #include <memory>
 #include <functional>
 #include "TreeIterator.hpp"
-
-
 
 #include <iostream>
 
@@ -53,8 +51,8 @@ class tree
 		typedef typename allocator_type::pointer			pointer;
 		typedef typename allocator_type::size_type			size_type;
 
-		typedef	TreeIterator<key_type, pointer> 			iterator;
-		typedef	TreeIterator<key_type, pointer> 			const_iterator;
+		typedef	TreeIterator<key_type, pointer, Compare> 	iterator;
+		typedef	TreeIterator<key_type, pointer, Compare> 	const_iterator;
 		
 	public: //Make private after testing
 		pointer				root_;
@@ -116,12 +114,14 @@ class tree
 			return (ft::make_pair(temp, false));
 		if (comp(val, temp->data)){
 			temp->left = allocNode(val, temp);
-			balance(temp->left);
-			return (ft::make_pair(temp->left, true));
+			temp = temp->left;
+			balance(temp);
+			return (ft::make_pair(temp, true));
 		}
 		temp->right = allocNode(val, temp);
-		balance(temp->right);
-		return (ft::make_pair(temp->right, true));
+		temp = temp->right;
+		balance(temp);
+		return (ft::make_pair(temp, true));
 	}
 
 	public:	//Make private after testing

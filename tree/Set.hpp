@@ -6,13 +6,14 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/10 01:49:44 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/11 05:07:24 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/11 18:24:15 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include "RBTree.hpp"
+#include "../Integral.hpp"
 
 #include <set>
 
@@ -35,7 +36,7 @@ class set
 		typedef	size_t					            size_type;
 
 	public:
-		typedef	tree<T>								tree;
+		typedef	tree<T, T, Compare>					tree;
 		typedef	std::allocator<node<T> >			node_allocator;
 		typedef	typename node_allocator::pointer	node_pointer;
 		typedef typename tree::iterator				iterator;
@@ -161,6 +162,37 @@ class set
 		//																	Allocator
 
 		allocator_type get_allocator() const { allocator_type alloc; return alloc; }		// Probably not even close
+
+
+		//																	Comparisons
+
+
+		friend bool operator== (const set<T,Compare,Alloc>& lhs, const set<T,Compare,Alloc>& rhs){
+				if (lhs.size() != rhs.size())
+					return false;
+				return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+			}
+		friend bool operator!= (const set<T,Compare,Alloc>& lhs, const set<T,Compare,Alloc>& rhs){
+				if (lhs.size() != rhs.size())
+					return true;
+				return (!ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+			}
+
+		friend bool operator< (const set<T,Compare,Alloc>& lhs, const set<T,Compare,Alloc>& rhs){
+				return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+			}
+
+		friend bool operator<= (const set<T,Compare,Alloc>& lhs, const set<T,Compare,Alloc>& rhs){
+				return (!ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end()));
+			}
+
+		friend bool operator> (const set<T,Compare,Alloc>& lhs, const set<T,Compare,Alloc>& rhs){
+				return (ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end()));
+			}
+			
+		friend bool operator>= (const set<T,Compare,Alloc>& lhs, const set<T,Compare,Alloc>& rhs){
+				return (!ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+			}
 
 };
 

@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 23:29:33 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/11 05:36:48 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/11 18:09:41 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 #include "../Iterator.hpp"
 
-template <typename T, typename N>
+template <typename T, typename N, typename Compare>
 class TreeIterator
 {		
 	public:
@@ -25,6 +25,7 @@ class TreeIterator
    		typedef typename std::bidirectional_iterator_tag	iterator_category;
 		
 	private:
+		Compare			comp;
 		node_pointer	ptr_;
 		bool			end_;
 		
@@ -57,7 +58,7 @@ class TreeIterator
 					end_ = true;
 					return (*this);
 				}
-				if (ptr->data < ptr->parent->data){
+				if (comp(ptr->data, ptr->parent->data)){
 					ptr_ = ptr->parent;
 					return (*this);
 				}
@@ -83,7 +84,7 @@ class TreeIterator
 					// end_ = true;
 					return (*this);
 				}
-				if (ptr->parent->data < ptr->data){				//Tree compare? same for other 3
+				if (comp(ptr->parent->data, ptr->data)){				//Tree compare? same for other 3
 					ptr_ = ptr->parent;
 					return (*this);
 				}
@@ -107,7 +108,7 @@ class TreeIterator
 					end_ = true;
 					return (it);
 				}
-				if (ptr->parent->data > ptr->data){
+				if (comp(ptr->data, ptr->parent->data)){
 					ptr_ = ptr->parent;
 					return (it);
 				}
@@ -134,7 +135,7 @@ class TreeIterator
 					// end_ = true;
 					return it;
 				}
-				if (ptr->parent->data < ptr->data){
+				if (comp(ptr->parent->data, ptr->data)){
 					ptr_ = ptr->parent;
 					return it;
 				}
