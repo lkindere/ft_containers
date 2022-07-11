@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 23:29:33 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/11 02:40:46 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/11 05:36:48 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,9 @@ class TreeIterator
 		// 																	// Operators
 		TreeIterator&					operator=(const TreeIterator& iter) { ptr_ = iter.base(); end_ = iter.end(); return (*this); }
 
-		bool							operator==(const TreeIterator& iter) const { return ((end_ == iter.end()) && ptr_ == iter.base()); }
+		bool							operator==(const TreeIterator& iter) const {
+			return ((end_ && iter.end()) || (end_ == iter.end() && ptr_ == iter.base()));
+		}
 		bool							operator!=(const TreeIterator& iter) const { return (!operator==(iter)); }
 		
 		const value_type&				operator*()	const { return (ptr_->data); }

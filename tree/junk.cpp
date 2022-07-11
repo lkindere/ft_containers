@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 12:50:48 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/11 03:38:40 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/11 05:32:53 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,12 @@
 
 #include "Set.hpp"
 
+enum	e_stuff {whatever, stuff};
+
 int	main(void)
 {
 	srand(time(NULL));
-
 	ft::set<int>			whatever;
-
 
 	whatever.insert(3);
 	whatever.insert(6);
@@ -41,10 +41,14 @@ int	main(void)
 	whatever.insert(27);
 	whatever.insert(30);
 
-	whatever.base_.printTree();
+	std::cout << (whatever.find(8) == whatever.end()) << std::endl;
 
-	std::cout << *whatever.lower_bound(10) << std::endl;
-	std::cout << *whatever.upper_bound(10) << std::endl;
+	// whatever.base_.printTree();
+
+	// ft::set<int>			clone(whatever);
+
+	// std::cout << *clone.lower_bound(10) << std::endl;
+	// std::cout << *clone.upper_bound(10) << std::endl;
 
 	// std::cout << whatever.max_size() << std::endl;
 	// std::cout << stdset.max_size() << std::endl;

@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/10 01:49:44 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/11 03:16:32 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/11 05:07:24 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,17 +57,24 @@ class set
 		template <class InputIterator> set (InputIterator first, InputIterator last,
 			const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
 			:	comp(comp), alloc(alloc), base_() {
-			while(first != last){
+			for (;first != last; ++first)
 				insert(*first);
-				++first;
-			}
 		}
 
-		// set (const set& x) {}
+		set (const set& x) : comp(x.comp), alloc(x.alloc), base_() {
+			for (set::iterator it = x.begin(); it != x.end(); ++it)
+				insert(*it);
+		}
 
 		// ~set() {}
 
-		//set& operator= (const set& x) {}
+		set& operator= (const set& x) {
+			base_.clear();
+			comp = x.comp;
+			for (set::iterator it = x.begin(); it != x.end(); ++it)
+				insert(*it);
+			return *this;
+		}
 
 		//																	Iterators
 		
@@ -89,6 +96,7 @@ class set
 
 		// size_type max_size() const { return base_.max_size(); }
 
+		
 		size_type max_size() const { return 576460752303423487; }	//Because testers are stupid that's why
 
 		

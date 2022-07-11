@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 23:12:27 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/11 03:43:18 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/11 05:36:58 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,7 +221,6 @@ class tree
 		}
 
 		void		unblack(pointer target){
-			pointer	parent = target->parent;
 			while (target->parent){
 				if (target->parent->left == target){
 					if (target->parent->right->color == red){
