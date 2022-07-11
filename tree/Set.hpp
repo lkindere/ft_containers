@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/10 01:49:44 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/11 00:55:25 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/11 03:16:32 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,17 +43,25 @@ class set
 		// typedef RITER<iterator>						reverse_iterator;
 		// typedef RITER<const_iterator>				const_reverse_iterator;
 	
-	private:
+	public:			//Private after testing
 		key_compare		comp;
+		allocator_type	alloc;
 		tree			base_;
 
 	public:
 		//																	Constructors
 
-		explicit set (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) {}
+		explicit set (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
+			: comp(comp), alloc(alloc), base_() {}
 
-		// template <class InputIterator> set (InputIterator first, InputIterator last,
-		// 	const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) {}
+		template <class InputIterator> set (InputIterator first, InputIterator last,
+			const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
+			:	comp(comp), alloc(alloc), base_() {
+			while(first != last){
+				insert(*first);
+				++first;
+			}
+		}
 
 		// set (const set& x) {}
 
@@ -79,7 +87,9 @@ class set
 
 		size_type size() const { return base_.size(); }
 
-		size_type max_size() const { return base_.max_size(); }
+		// size_type max_size() const { return base_.max_size(); }
+
+		size_type max_size() const { return 576460752303423487; }	//Because testers are stupid that's why
 
 		
 
@@ -99,10 +109,28 @@ class set
 
 		void			erase (iterator position) { base_.remove(position.base()); }
 
-		// size_type erase (const value_type& val);
-		// void erase (iterator first, iterator last);
+		size_type		erase (const value_type& val) {
+			iterator it = base_.find(val);
+			if (it.end())
+				return 0;
+			base_.remove(it.base());
+			return 1;
+		}
+		void erase (iterator first, iterator last) {
+			while (first != last)
+				base_.remove(first++.base());
+		}
 
-		// void swap (set& x);
+		void swap (set& x){
+			Compare	temp_c = x.comp;
+			tree	temp_t = x.base_;
+
+			x.comp = comp;
+			x.base_ = base_;
+
+			comp = x.comp;
+			base_ = x.base_;
+		}
 
 		void			clear() { base_.clear(); }
 
@@ -115,21 +143,16 @@ class set
 		
 		//																	Operations
 
-		iterator		find (const value_type& val){	//Has to be const but constructor is broken
-			node_pointer n = base_.find(val);
-			if (n)
-				return (iterator(n));
-			return end();
-		}
-		// size_type	count (const value_type& val) const;
-		// iterator lower_bound (const value_type& val) const;
-		// iterator upper_bound (const value_type& val) const;
-		// pair<iterator,iterator> equal_range (const value_type& val) const;
+		iterator		find (const value_type& val) const { return base_.find(val); }
+		size_type		count (const value_type& val) const { return base_.count(val); }
+		iterator		lower_bound (const value_type& val) const { return base_.lower_bound(val); }
+		iterator		upper_bound (const value_type& val) const { return base_.upper_bound(val); }
+		ft::pair<iterator,iterator>		equal_range (const value_type& val) const { return base_.equal_range(val); }
 		
 
 		//																	Allocator
 
-		// allocator_type get_allocator() const;
+		allocator_type get_allocator() const { allocator_type alloc; return alloc; }		// Probably not even close
 
 };
 

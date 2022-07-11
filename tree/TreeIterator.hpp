@@ -6,11 +6,13 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 23:29:33 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/11 00:57:14 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/11 02:40:46 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
+
+#include <iostream>
 
 #include "../Iterator.hpp"
 
@@ -41,8 +43,8 @@ class TreeIterator
 		bool							operator==(const TreeIterator& iter) const { return ((end_ == iter.end()) && ptr_ == iter.base()); }
 		bool							operator!=(const TreeIterator& iter) const { return (!operator==(iter)); }
 		
-		const value_type				operator*()	const { return (ptr_->data); }
-		// node_pointer							operator->() const { return &(ptr_->data); }
+		const value_type&				operator*()	const { return (ptr_->data); }
+		const value_type*				operator->() const { return &ptr_->data; }
 
 		TreeIterator&			operator++() {
 			node_pointer	ptr = ptr_;
@@ -144,6 +146,6 @@ class TreeIterator
 			return it;
 		}
 
-		node_pointer 	base() const { return ptr_; }
+		node_pointer	base() const { return ptr_; }
 		bool	end() const { return end_; }
 };

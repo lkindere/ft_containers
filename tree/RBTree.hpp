@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 23:12:27 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/11 00:57:25 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/11 03:43:18 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,19 +65,21 @@ class tree
 		key_compare			comp;
 
 	public:
-	tree() : root_(NULL) {} 
+	tree() : root_(NULL), size_(), alloc_() {} 
 	~tree() {}
 
-	iterator	begin()	{
+	iterator	begin() const {
 		pointer	ptr = root_;
+		if (!ptr)
+			return end();
 		while (ptr->left)
 			ptr = ptr->left;
 		return (iterator(ptr, false));
 	};
 
-	iterator	end() {
+	iterator	end() const {
 		pointer	ptr = root_;
-		while (ptr->right)
+		while (ptr && ptr->right)
 			ptr = ptr->right;
 		return iterator(ptr, true);
 	}
@@ -96,7 +98,7 @@ class tree
 	}
 
 	ft::pair<pointer, bool>	insert(const value_type &val, pointer hint = NULL) {
-		if (hint)
+		if (hint)														//Add a hint check
 			;
 		if (!root_){
 			root_ = allocNode(val);
@@ -329,7 +331,7 @@ class tree
 			}
 		}
 
-		pointer	find(const key_type& key) const {
+		iterator	find(const key_type& key) const {
 			pointer	temp = root_;
 			while (temp && (comp(key, temp->getKey()) || comp(temp->getKey(), key))){
 				while (temp && comp(key, temp->getKey()))
@@ -337,10 +339,57 @@ class tree
 				while (temp && comp(temp->getKey(), key))
 					temp = temp->right;
 			}
-			return temp;
+			if (temp)
+				return (iterator(temp));
+			return end();
 		}
 
+		size_type	count(const key_type& key) const {
+			pointer	temp = root_;
+			while (temp && (comp(key, temp->getKey()) || comp(temp->getKey(), key))){
+				while (temp && comp(key, temp->getKey()))
+					temp = temp->left;
+				while (temp && comp(temp->getKey(), key))
+					temp = temp->right;
+			}
+			if (temp)
+				return 1;
+			return 0;
+		}
 
+		iterator	lower_bound (const key_type& key) const {
+			pointer	temp = root_;
+			while (comp(key, temp->data) && temp->left)
+				temp = temp->left;
+			while (comp(temp->data, key) && temp->right)
+				temp = temp->right;
+			if (!comp(temp->data, key))
+				return iterator(temp);
+			if (temp->parent && !comp(temp->parent->data, key))
+				return iterator(temp->parent);
+			if (!comp(root_->data, key))
+				return iterator(root_);
+			return end();
+		}
+
+		iterator	upper_bound (const key_type& key) const {
+			pointer	temp = root_;
+			while (comp(key, temp->data) && temp->left)
+				temp = temp->left;
+			while (comp(temp->data, key) && temp->right)
+				temp = temp->right;
+			if (comp(key, temp->data))
+				return iterator(temp);
+			if (temp->parent && comp(key, temp->parent->data))
+				return iterator(temp->parent);
+			if (comp(key, root_->data))
+				return iterator(root_);
+			return end();
+		}
+
+		ft::pair<iterator,iterator>		equal_range (const value_type& val) const {
+			return (ft::make_pair(lower_bound(val), upper_bound(val)));
+		}
 
 		void	printTree(){
 			int	lines = 30;
