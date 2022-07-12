@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 12:37:52 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/04 00:46:23 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/12 10:39:21 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,12 @@ class vector
 		typedef typename Alloc::const_reference			const_reference;
 		typedef typename Alloc::pointer					pointer;
 		typedef typename Alloc::const_pointer			const_pointer;
+		typedef	ptrdiff_t								difference_type;
+		typedef	size_t									size_type;
 		typedef VectorIterator<pointer>					iterator;
 		typedef VectorIterator<const_pointer>			const_iterator;
 		typedef VectorRevIterator<iterator>				reverse_iterator;
 		typedef VectorRevIterator<const_iterator>		const_reverse_iterator;
-		typedef	ptrdiff_t								difference_type;
-		typedef	size_t									size_type;
 
 	private:
 		pointer					data_;

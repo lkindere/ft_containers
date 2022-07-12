@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 23:12:27 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/11 18:07:34 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/12 11:05:00 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ class tree
 
 		typedef	TreeIterator<key_type, pointer, Compare> 	iterator;
 		typedef	TreeIterator<key_type, pointer, Compare> 	const_iterator;
+		typedef TreeRevIterator<iterator>					reverse_iterator;
+		typedef TreeRevIterator<const_iterator>				const_reverse_iterator;
 		
 	public: //Make private after testing
 		pointer				root_;
@@ -72,14 +74,30 @@ class tree
 			return end();
 		while (ptr->left)
 			ptr = ptr->left;
-		return (iterator(ptr, false));
+		return (iterator(ptr, none));
 	};
 
 	iterator	end() const {
 		pointer	ptr = root_;
 		while (ptr && ptr->right)
 			ptr = ptr->right;
-		return iterator(ptr, true);
+		return iterator(ptr, is_end);
+	}
+
+	reverse_iterator	rbegin() const {
+		pointer	ptr = root_;
+		while (ptr && ptr->right)
+			ptr = ptr->right;
+		return (reverse_iterator(iterator(ptr, none)));
+	}
+
+	reverse_iterator	rend() const {
+		pointer	ptr = root_;
+		if (!ptr)
+			return end();
+		while (ptr->left)
+			ptr = ptr->left;
+		return (reverse_iterator(iterator(ptr, is_rend)));
 	}
 
 	key_compare	key_comp() const { return comp; }

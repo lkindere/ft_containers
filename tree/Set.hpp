@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/10 01:49:44 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/11 18:24:15 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/12 12:18:04 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,26 +23,26 @@ template <class T, class Compare = std::less<T>, class Alloc = std::allocator<T>
 class set
 {
 	public:
-		typedef T									key_type;
-		typedef T									value_type;
-		typedef Compare								key_compare;
-		typedef Compare								value_compare;
-		typedef Alloc								allocator_type;
-		typedef typename Alloc::pointer				pointer;
-		typedef typename Alloc::reference			reference;
-		typedef typename Alloc::const_pointer		const_pointer;
-		typedef typename Alloc::const_reference		const_reference;
-		typedef ptrdiff_t							difference_type;
-		typedef	size_t					            size_type;
+		typedef T										key_type;
+		typedef T										value_type;
+		typedef Compare									key_compare;
+		typedef Compare									value_compare;
+		typedef Alloc									allocator_type;
+		typedef typename Alloc::pointer					pointer;
+		typedef typename Alloc::reference				reference;
+		typedef typename Alloc::const_pointer			const_pointer;
+		typedef typename Alloc::const_reference			const_reference;
+		typedef ptrdiff_t								difference_type;
+		typedef	size_t					            	size_type;
 
 	public:
-		typedef	tree<T, T, Compare>					tree;
-		typedef	std::allocator<node<T> >			node_allocator;
-		typedef	typename node_allocator::pointer	node_pointer;
-		typedef typename tree::iterator				iterator;
-		typedef typename tree::const_iterator		const_iterator;
-		// typedef RITER<iterator>						reverse_iterator;
-		// typedef RITER<const_iterator>				const_reverse_iterator;
+		typedef	tree<T, T, Compare>						tree;
+		typedef	std::allocator<node<T> >				node_allocator;
+		typedef	typename node_allocator::pointer		node_pointer;
+		typedef typename tree::iterator					iterator;
+		typedef typename tree::const_iterator			const_iterator;
+		typedef typename tree::reverse_iterator			reverse_iterator;
+		typedef typename tree::const_reverse_iterator	const_reverse_iterator;
 	
 	public:			//Private after testing
 		key_compare		comp;
@@ -79,14 +79,14 @@ class set
 
 		//																	Iterators
 		
-		iterator		begin() { return base_.begin(); }
-		const_iterator 	begin() const { return base_.begin(); }
-		iterator 		end() { return base_.end(); }
-		const_iterator 	end() const { return base_.end(); }
-		// reverse_iterator rbegin();
-		// const_reverse_iterator rbegin() const;
-		// reverse_iterator rend();
-		// const_reverse_iterator rend() const;
+		iterator				begin() { return base_.begin(); }
+		const_iterator 			begin() const { return base_.begin(); }
+		iterator 				end() { return base_.end(); }
+		const_iterator 			end() const { return base_.end(); }
+		reverse_iterator 		rbegin() { return base_.rbegin(); }
+		const_reverse_iterator	rbegin() const { return base_.rbegin(); }
+		reverse_iterator 		rend() { return base_.rend(); }
+		const_reverse_iterator 	rend() const { return base_.rend(); }
 
 
 		//																	Capacity
@@ -120,7 +120,7 @@ class set
 
 		size_type		erase (const value_type& val) {
 			iterator it = base_.find(val);
-			if (it.end())
+			if (it.end() != none)
 				return 0;
 			base_.remove(it.base());
 			return 1;
