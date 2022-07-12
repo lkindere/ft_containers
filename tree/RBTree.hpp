@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 23:12:27 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/12 17:07:47 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/13 01:14:24 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,35 +34,32 @@ struct node
 	public:
 		node() : data(), left(), right(), parent(), color() {}
 		node(const T& val) : data(val), left(), right(), parent(), color(red) {}
-
-		T&	getKey() { return data; }
-		T&	getData() { return data; }
 };
 
-
-template <class Key, class T = Key, class Compare = std::less<Key>, class Alloc = std::allocator<node<Key> > >
+template <class Key, class Compare, class Alloc>
 class tree
 {
 	public:
-		typedef	T											value_type;
 		typedef	Key											key_type;
 		typedef Compare										key_compare;
-		typedef Alloc										allocator_type;
-		typedef typename allocator_type::pointer			pointer;
-		typedef typename allocator_type::size_type			size_type;
+		typedef	typename Alloc::value_type					value_type;
 
-		typedef	TreeIterator<key_type, pointer, Compare> 	iterator;
-		typedef	TreeIterator<key_type, pointer, Compare> 	const_iterator;
+		typedef	typename std::allocator<node<value_type> >	allocator_type;
+		typedef	typename allocator_type::pointer			pointer;
+		typedef typename allocator_type::size_type			size_type;
+		
+		typedef	TreeIterator<value_type, pointer, Compare> 	iterator;
+		typedef	TreeIterator<value_type, pointer, Compare> 	const_iterator;
 		typedef TreeRevIterator<iterator>					reverse_iterator;
 		typedef TreeRevIterator<const_iterator>				const_reverse_iterator;
-		
+	
+	public:
+		Compare				comp;
+
 	public: //Make private after testing
 		pointer				root_;
 		size_type			size_;
 		allocator_type		alloc_;
-	
-	public:
-		key_compare			comp;
 
 	public:
 	tree() : root_(NULL), size_(), alloc_() {} 
@@ -342,10 +339,10 @@ class tree
 
 		iterator	find(const key_type& key) const {
 			pointer	temp = root_;
-			while (temp && (comp(key, temp->getKey()) || comp(temp->getKey(), key))){
-				while (temp && comp(key, temp->getKey()))
+			while (temp && (comp(key, temp->data) || comp(temp->data, key))){
+				while (temp && comp(key, temp->data))
 					temp = temp->left;
-				while (temp && comp(temp->getKey(), key))
+				while (temp && comp(temp->data, key))
 					temp = temp->right;
 			}
 			if (temp)
@@ -355,10 +352,10 @@ class tree
 
 		size_type	count(const key_type& key) const {
 			pointer	temp = root_;
-			while (temp && (comp(key, temp->getKey()) || comp(temp->getKey(), key))){
-				while (temp && comp(key, temp->getKey()))
+			while (temp && (comp(key, temp->data) || comp(temp->data, key))){
+				while (temp && comp(key, temp->data))
 					temp = temp->left;
-				while (temp && comp(temp->getKey(), key))
+				while (temp && comp(temp->data, key))
 					temp = temp->right;
 			}
 			if (temp)
@@ -372,9 +369,11 @@ class tree
 				temp = temp->left;
 			while (comp(temp->data, key) && temp->right)
 				temp = temp->right;
+			if (temp->left && !comp(temp->left->data, key))
+				return iterator(temp->left);
 			if (!comp(temp->data, key))
 				return iterator(temp);
-			if (temp->parent && !comp(temp->parent->data, key))
+			if (temp->parent && !comp(temp->parent->data, key))	//Useless?
 				return iterator(temp->parent);
 			if (!comp(root_->data, key))
 				return iterator(root_);
@@ -387,16 +386,18 @@ class tree
 				temp = temp->left;
 			while (comp(temp->data, key) && temp->right)
 				temp = temp->right;
+			if (temp->left && comp(key, temp->left->data))
+				return iterator(temp->left);
 			if (comp(key, temp->data))
 				return iterator(temp);
-			if (temp->parent && comp(key, temp->parent->data))
+			if (temp->parent && comp(key, temp->parent->data)) //Useless?
 				return iterator(temp->parent);
 			if (comp(key, root_->data))
 				return iterator(root_);
 			return end();
 		}
 
-		ft::pair<iterator,iterator>		equal_range (const value_type& val) const {
+		ft::pair<iterator,iterator>		equal_range (const key_type& val) const {
 			return (ft::make_pair(lower_bound(val), upper_bound(val)));
 		}
 
@@ -407,7 +408,7 @@ class tree
 			if (root_){	//Level 1
 				for (int i = 0; i < lines + spaces / 2; ++i)
 					std::cout << "-";
-				std::cout << root_->data << "." << root_->color;
+				std::cout << root_->data.first << "." << root_->color;
 				for (int i = 0; i < lines; ++i)
 					std::cout << "-";
 				std::cout << std::endl;
@@ -418,10 +419,10 @@ class tree
 				--lines; ++spaces;
 				for (int i = 0; i < lines; ++i)
 					std::cout << "-";
-				(root_->left) ? std::cout << root_->left->data << "." << root_->left->color : std::cout << "**";
+				(root_->left) ? std::cout << root_->left->data.first << "." << root_->left->color : std::cout << "**";
 				for (int i = 0; i < spaces; ++i)
 					std::cout << ' ';
-				(root_->right) ? std::cout << root_->right->data << "." << root_->right->color : std::cout << "**";
+				(root_->right) ? std::cout << root_->right->data.first << "." << root_->right->color : std::cout << "**";
 				for (int i = 0; i < lines; ++i)
 					std::cout << "-";
 				std::cout << std::endl;
@@ -430,16 +431,16 @@ class tree
 				lines /= 1.2; spaces /= 2;
 				for (int i = 0; i < lines; ++i)
 					std::cout << "-";
-				(root_->left && root_->left->left) ? std::cout << root_->left->left->data << "." << root_->left->left->color : std::cout << "**";
+				(root_->left && root_->left->left) ? std::cout << root_->left->left->data.first << "." << root_->left->left->color : std::cout << "**";
 				for (int i = 0; i < spaces; ++i)
 					std::cout << ' ';
-				(root_->left && root_->left->right) ? std::cout << root_->left->right->data << "." << root_->left->right->color : std::cout << "**";
+				(root_->left && root_->left->right) ? std::cout << root_->left->right->data.first << "." << root_->left->right->color : std::cout << "**";
 				for (int i = 0; i < spaces; ++i)
 					std::cout << ' ';
-				(root_->right && root_->right->left) ? std::cout << root_->right->left->data << "." << root_->right->left->color : std::cout << "**";
+				(root_->right && root_->right->left) ? std::cout << root_->right->left->data.first << "." << root_->right->left->color : std::cout << "**";
 				for (int i = 0; i < spaces; ++i)
 					std::cout << ' ';
-				(root_->right && root_->right->right) ? std::cout << root_->right->right->data << "." << root_->right->right->color : std::cout << "**";
+				(root_->right && root_->right->right) ? std::cout << root_->right->right->data.first << "." << root_->right->right->color : std::cout << "**";
 				for (int i = 0; i < lines; ++i)
 					std::cout << "-";
 				std::cout << std::endl;
@@ -448,35 +449,35 @@ class tree
 				lines /= 1.1; spaces /= 2;
 				for (int i = 0; i < lines; ++i)
 					std::cout << "-";
-				(root_->left && root_->left->left && root_->left->left->left) ? std::cout << root_->left->left->left->data << "." << root_->left->left->left->color
+				(root_->left && root_->left->left && root_->left->left->left) ? std::cout << root_->left->left->left->data.first << "." << root_->left->left->left->color
 					: std::cout << "**";
 				for (int i = 0; i < spaces; ++i)
 					std::cout << ' ';
-				(root_->left && root_->left->left && root_->left->left->right) ? std::cout << root_->left->left->right->data << "." << root_->left->left->right->color
+				(root_->left && root_->left->left && root_->left->left->right) ? std::cout << root_->left->left->right->data.first << "." << root_->left->left->right->color
 					: std::cout << "**";
 				for (int i = 0; i < spaces - 2; ++i)
 					std::cout << ' ';
-				(root_->left && root_->left->right && root_->left->right->left) ? std::cout << root_->left->right->left->data << "." << root_->left->right->left->color
+				(root_->left && root_->left->right && root_->left->right->left) ? std::cout << root_->left->right->left->data.first << "." << root_->left->right->left->color
 					: std::cout << "**";
 				for (int i = 0; i < spaces; ++i)
 					std::cout << ' ';
-				(root_->left && root_->left->right && root_->left->right->right) ? std::cout << root_->left->right->right->data << "." << root_->left->right->right->color
+				(root_->left && root_->left->right && root_->left->right->right) ? std::cout << root_->left->right->right->data.first << "." << root_->left->right->right->color
 					: std::cout << "**";
 				for (int i = 0; i < spaces - 2; ++i)
 					std::cout << ' ';
-				(root_->right && root_->right->left && root_->right->left->left) ? std::cout << root_->right->left->left->data << "." << root_->right->left->left->color
+				(root_->right && root_->right->left && root_->right->left->left) ? std::cout << root_->right->left->left->data.first << "." << root_->right->left->left->color
 					: std::cout << "**";
 				for (int i = 0; i < spaces; ++i)
 					std::cout << ' ';
-				(root_->right && root_->right->left && root_->right->left->right) ? std::cout << root_->right->left->right->data << "." << root_->right->left->right->color
+				(root_->right && root_->right->left && root_->right->left->right) ? std::cout << root_->right->left->right->data.first << "." << root_->right->left->right->color
 					: std::cout << "**";
 				for (int i = 0; i < spaces; ++i)
 					std::cout << ' ';
-				(root_->right && root_->right->right && root_->right->right->left) ? std::cout << root_->right->right->left->data << "." << root_->right->right->left->color
+				(root_->right && root_->right->right && root_->right->right->left) ? std::cout << root_->right->right->left->data.first << "." << root_->right->right->left->color
 					: std::cout << "**";
 				for (int i = 0; i < spaces; ++i)
 					std::cout << ' ';
-				(root_->right && root_->right->right && root_->right->right->right) ? std::cout << root_->right->right->right->data << "." << root_->right->right->right->color
+				(root_->right && root_->right->right && root_->right->right->right) ? std::cout << root_->right->right->right->data.first << "." << root_->right->right->right->color
 					: std::cout << "**";
 				for (int i = 0; i < lines; ++i)
 					std::cout << "-";

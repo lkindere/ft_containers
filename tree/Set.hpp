@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/10 01:49:44 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/12 17:51:02 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/12 23:49:13 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@
 
 namespace	ft {
 
-template <class T, class Compare = std::less<T>, class Alloc = std::allocator<T> >
+template <class Key, class Compare = std::less<Key>, class Alloc = std::allocator<Key> >
 class set
 {
 	public:
-		typedef T										key_type;
-		typedef T										value_type;
+		typedef Key										key_type;
+		typedef Key										value_type;
 		typedef Compare									key_compare;
 		typedef Compare									value_compare;
 		typedef Alloc									allocator_type;
@@ -36,9 +36,7 @@ class set
 		typedef	size_t					            	size_type;
 
 	public:
-		typedef	tree<T, T, Compare>						tree;
-		typedef	std::allocator<node<T> >				node_allocator;
-		typedef	typename node_allocator::pointer		node_pointer;
+		typedef	tree<Key, Compare, Alloc>				tree;
 		typedef typename tree::iterator					iterator;
 		typedef typename tree::const_iterator			const_iterator;
 		typedef typename tree::reverse_iterator			reverse_iterator;
@@ -92,13 +90,11 @@ class set
 		//																	Capacity
 
 		bool empty() const { return base_.empty(); }
-
 		size_type size() const { return base_.size(); }
-
-		// size_type max_size() const { return base_.max_size(); }
+		size_type max_size() const { return base_.max_size(); }
 
 		
-		size_type max_size() const { return 576460752303423487; }	//Because testers are stupid that's why
+		// size_type max_size() const { return 576460752303423487; }	//Because testers are stupid that's why
 
 		
 
@@ -125,6 +121,7 @@ class set
 			base_.remove(it.base());
 			return 1;
 		}
+
 		void erase (iterator first, iterator last) {
 			while (first != last)
 				base_.remove(first++.base());
@@ -167,30 +164,30 @@ class set
 		//																	Comparisons
 
 
-		friend bool operator== (const set<T,Compare,Alloc>& lhs, const set<T,Compare,Alloc>& rhs){
+		friend bool operator== (const set<Key,Compare,Alloc>& lhs, const set<Key,Compare,Alloc>& rhs){
 				if (lhs.size() != rhs.size())
 					return false;
 				return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 			}
-		friend bool operator!= (const set<T,Compare,Alloc>& lhs, const set<T,Compare,Alloc>& rhs){
+		friend bool operator!= (const set<Key,Compare,Alloc>& lhs, const set<Key,Compare,Alloc>& rhs){
 				if (lhs.size() != rhs.size())
 					return true;
 				return (!ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 			}
 
-		friend bool operator< (const set<T,Compare,Alloc>& lhs, const set<T,Compare,Alloc>& rhs){
+		friend bool operator< (const set<Key,Compare,Alloc>& lhs, const set<Key,Compare,Alloc>& rhs){
 				return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 			}
 
-		friend bool operator<= (const set<T,Compare,Alloc>& lhs, const set<T,Compare,Alloc>& rhs){
+		friend bool operator<= (const set<Key,Compare,Alloc>& lhs, const set<Key,Compare,Alloc>& rhs){
 				return (!ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end()));
 			}
 
-		friend bool operator> (const set<T,Compare,Alloc>& lhs, const set<T,Compare,Alloc>& rhs){
+		friend bool operator> (const set<Key,Compare,Alloc>& lhs, const set<Key,Compare,Alloc>& rhs){
 				return (ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end()));
 			}
 			
-		friend bool operator>= (const set<T,Compare,Alloc>& lhs, const set<T,Compare,Alloc>& rhs){
+		friend bool operator>= (const set<Key,Compare,Alloc>& lhs, const set<Key,Compare,Alloc>& rhs){
 				return (!ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 			}
 

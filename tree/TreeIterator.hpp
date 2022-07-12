@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 23:29:33 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/12 17:46:59 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/13 01:14:58 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,9 @@ class TreeIterator
 		bool							operator!=(const TreeIterator& iter) const { return (!operator==(iter)); }
 		
 		const value_type&				operator*()	const { return (ptr_->data); }
+		value_type&						operator*()	{ return (ptr_->data); }
 		const value_type*				operator->() const { return &ptr_->data; }
+		value_type*						operator->() { return &ptr_->data; }
 
 		TreeIterator&			operator++() {
 			node_pointer	ptr = ptr_;
@@ -195,7 +197,15 @@ class TreeRevIterator
 			_iter it(current); return (*--it);
 		}
 
+		value_type&						operator*() {
+			_iter it(current); return (*--it);
+		}
+
 		const value_type*				operator->() const {
+			_iter it(current); return &(*--it);
+		}
+
+		value_type*						operator->() {
 			_iter it(current); return &(*--it);
 		}
 
