@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 23:12:27 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/12 11:05:00 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/12 17:07:47 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,25 +79,17 @@ class tree
 
 	iterator	end() const {
 		pointer	ptr = root_;
-		while (ptr && ptr->right)
+		while (ptr && ptr->right)	
 			ptr = ptr->right;
 		return iterator(ptr, is_end);
 	}
 
 	reverse_iterator	rbegin() const {
-		pointer	ptr = root_;
-		while (ptr && ptr->right)
-			ptr = ptr->right;
-		return (reverse_iterator(iterator(ptr, none)));
+		return (reverse_iterator(end()));
 	}
 
 	reverse_iterator	rend() const {
-		pointer	ptr = root_;
-		if (!ptr)
-			return end();
-		while (ptr->left)
-			ptr = ptr->left;
-		return (reverse_iterator(iterator(ptr, is_rend)));
+		return (reverse_iterator(begin()));
 	}
 
 	key_compare	key_comp() const { return comp; }

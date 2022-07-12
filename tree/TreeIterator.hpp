@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 23:29:33 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/12 12:30:22 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/12 17:46:59 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,26 +187,26 @@ class TreeRevIterator
 		}
 
 		bool							operator==(const TreeRevIterator& iter) const {
-			return (iter.base() == current.base() && iter.end() == current.end());
+			return (iter.base() == current.base());
 		}
 		bool							operator!=(const TreeRevIterator& iter) const { return (!operator==(iter)); }
 		
-		const value_type&				operator*()	{
-			_iter it(base()); return (*it);
+		const value_type&				operator*() const {
+			_iter it(current); return (*--it);
 		}
 
-		const value_type*				operator->() {
-			_iter it(base()); return &(*it);
+		const value_type*				operator->() const {
+			_iter it(current); return &(*--it);
 		}
 
 		TreeRevIterator&				operator++() { --current; return (*this); }
 
 		TreeRevIterator&				operator--() { ++current; return (*this); }
 
-		TreeRevIterator					operator++(int) { TreeRevIterator it(*this); --current; return (*this); }
+		TreeRevIterator					operator++(int) { TreeRevIterator it(*this); --current; return (it); }
 
-		TreeRevIterator					operator--(int) { TreeRevIterator it(*this); ++current; return (*this); }
+		TreeRevIterator					operator--(int) { TreeRevIterator it(*this); ++current; return (it); }
 
-		_iter		base() const { return current.base(); }
+		_iter		base() const { return current; }
 		e_end		end() const	{ return current.end(); }
 };

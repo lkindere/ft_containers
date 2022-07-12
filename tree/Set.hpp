@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/10 01:49:44 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/12 12:18:04 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/12 17:51:02 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,8 +137,8 @@ class set
 			x.comp = comp;
 			x.base_ = base_;
 
-			comp = x.comp;
-			base_ = x.base_;
+			comp = temp_c;
+			base_ = temp_t;
 		}
 
 		void			clear() { base_.clear(); }
