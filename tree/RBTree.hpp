@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 23:12:27 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/14 17:49:51 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/14 18:14:12 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,15 @@ template <class T>	//Key and data are the same
 struct node
 {
 	public:
-		T			data;
 		node*		left;
 		node*		right;
 		node*		parent;
+		T			data;
 		e_color		color;
 	
 	public:
-		node() : data(), left(), right(), parent(), color() {}
-		node(const T& val) : data(val), left(), right(), parent(), color(red) {}
+		node() : left(), right(), parent(), data(), color() {}
+		node(const T& val) : left(), right(), parent(), data(val), color(red) {}
 };
 
 template <class Key, class Data, class Compare, class Ret = Data, class Con = Ret>

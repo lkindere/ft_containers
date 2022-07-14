@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/10 01:49:44 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/14 16:41:12 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/14 18:14:42 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,12 +92,8 @@ class set
 		bool empty() const { return base_.empty(); }
 		size_type size() const { return base_.size(); }
 		size_type max_size() const { return base_.max_size(); }
-
 		
-		// size_type max_size() const { return 576460752303423487; }	//Because testers are stupid that's why
-
 		
-
 		//																	Modifiers
 
 		ft::pair<iterator,bool>	insert (const value_type& val) { return base_.insert(val); }
