@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/10 01:49:44 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/12 23:49:13 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/14 16:41:12 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,16 @@ class set
 		typedef	size_t					            	size_type;
 
 	public:
-		typedef	tree<Key, Compare, Alloc>				tree;
-		typedef typename tree::iterator					iterator;
-		typedef typename tree::const_iterator			const_iterator;
-		typedef typename tree::reverse_iterator			reverse_iterator;
-		typedef typename tree::const_reverse_iterator	const_reverse_iterator;
+		typedef	tree<Key, Key, Compare, const Key>		rbtree;
+		typedef typename rbtree::const_iterator			iterator;
+		typedef typename rbtree::const_iterator			const_iterator;
+		typedef typename rbtree::const_reverse_iterator	reverse_iterator;
+		typedef typename rbtree::const_reverse_iterator	const_reverse_iterator;
 	
 	public:			//Private after testing
 		key_compare		comp;
 		allocator_type	alloc;
-		tree			base_;
+		rbtree			base_;
 
 	public:
 		//																	Constructors
@@ -129,7 +129,7 @@ class set
 
 		void swap (set& x){
 			Compare	temp_c = x.comp;
-			tree	temp_t = x.base_;
+			rbtree	temp_t = x.base_;
 
 			x.comp = comp;
 			x.base_ = base_;

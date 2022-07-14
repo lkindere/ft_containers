@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 12:37:52 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/12 10:39:21 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/14 17:59:53 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -403,8 +403,8 @@ namespace ft {
 	void	swap (ft::vector<T>& x, ft::vector<T> &y) { x.swap(y); }
 }
 
-namespace std {
+// namespace std {
 
-	template <typename T>
-	void	swap (ft::vector<T>& x, ft::vector<T> &y) { x.swap(y); }
-}
+// 	template <typename T>
+// 	void	swap (ft::vector<T>& x, ft::vector<T> &y) { x.swap(y); }
+// }

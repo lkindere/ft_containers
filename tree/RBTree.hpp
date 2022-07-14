@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 23:12:27 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/13 01:14:24 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/14 17:49:51 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,20 +36,21 @@ struct node
 		node(const T& val) : data(val), left(), right(), parent(), color(red) {}
 };
 
-template <class Key, class Compare, class Alloc>
+template <class Key, class Data, class Compare, class Ret = Data, class Con = Ret>
 class tree
 {
 	public:
-		typedef	Key											key_type;
+		typedef Key											key_type;
+		typedef	Data										data_type;
 		typedef Compare										key_compare;
-		typedef	typename Alloc::value_type					value_type;
-
-		typedef	typename std::allocator<node<value_type> >	allocator_type;
+		typedef	Ret											value_type;
+		typedef	Con											const_type;
+		typedef	typename std::allocator<node<Ret> >			allocator_type;
 		typedef	typename allocator_type::pointer			pointer;
 		typedef typename allocator_type::size_type			size_type;
 		
 		typedef	TreeIterator<value_type, pointer, Compare> 	iterator;
-		typedef	TreeIterator<value_type, pointer, Compare> 	const_iterator;
+		typedef	ConstTreeIterator<const_type, pointer, Compare> const_iterator;
 		typedef TreeRevIterator<iterator>					reverse_iterator;
 		typedef TreeRevIterator<const_iterator>				const_reverse_iterator;
 	
@@ -63,6 +64,7 @@ class tree
 
 	public:
 	tree() : root_(NULL), size_(), alloc_() {} 
+	tree(const tree& t) : root_(t.root_), size_(t.size_), alloc_(t.alloc_) {}
 	~tree() {}
 
 	iterator	begin() const {
@@ -74,6 +76,15 @@ class tree
 		return (iterator(ptr, none));
 	};
 
+	// const_iterator	begin() {
+	// 	pointer	ptr = root_;
+	// 	if (!ptr)
+	// 		return end();
+	// 	while (ptr->left)
+	// 		ptr = ptr->left;
+	// 	return (iterator(ptr, none));
+	// };
+
 	iterator	end() const {
 		pointer	ptr = root_;
 		while (ptr && ptr->right)	
@@ -81,13 +92,17 @@ class tree
 		return iterator(ptr, is_end);
 	}
 
-	reverse_iterator	rbegin() const {
-		return (reverse_iterator(end()));
-	}
+	// const_iterator	end() {
+	// 	pointer	ptr = root_;
+	// 	while (ptr && ptr->right)	
+	// 		ptr = ptr->right;
+	// 	return iterator(ptr, is_end);
+	// }
 
-	reverse_iterator	rend() const {
-		return (reverse_iterator(begin()));
-	}
+	reverse_iterator	rbegin() const { return (reverse_iterator(end())); }
+	// const_reverse_iterator	rbegin() { return (reverse_iterator(end())); }
+	reverse_iterator	rend() const { return (reverse_iterator(begin())); }
+	// const_reverse_iterator	rend const() const { return (reverse_iterator(begin())); }
 
 	key_compare	key_comp() const { return comp; }
 
@@ -290,6 +305,7 @@ class tree
 				target->color = black;
 		}
 
+
 		void		remove(pointer target){
 			if (target->left == NULL || target->right == NULL){
 				if (target->left){
@@ -332,9 +348,22 @@ class tree
 				pointer	temp = target->left;
 				while (temp->right)
 					temp = temp->right;
-				target->data = temp->data;
+				consts_are_killing_me(&target, temp);
 				remove(temp);
 			}
+
+		}
+
+		void consts_are_killing_me(pointer *target, pointer temp) {
+			pointer	left = (*target)->left;
+			pointer right = (*target)->right;
+			pointer parent = (*target)->parent;
+			e_color	color = (*target)->color;
+			alloc_.construct(*target, temp->data);
+			(*target)->left = left;
+			(*target)->right = right;
+			(*target)->parent = parent;
+			(*target)->color = color;
 		}
 
 		iterator	find(const key_type& key) const {

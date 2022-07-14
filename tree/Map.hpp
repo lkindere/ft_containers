@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 01:01:44 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/13 00:05:57 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/14 17:53:26 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ class map
 		typedef Key											key_type;
 		typedef T											mapped_type;
 		typedef pair<key_type, mapped_type>					value_type;
+		typedef	pair<const key_type, mapped_type>			value_pair;
+		typedef	const pair<const key_type, mapped_type>		const_pair;
 		typedef Compare										key_compare;
 		typedef Alloc										allocator_type;
 		typedef typename allocator_type::reference			reference;
@@ -58,11 +60,12 @@ class map
 	public:
 		typedef	std::allocator<node<value_type> >			node_allocator;
 		typedef	typename node_allocator::pointer			node_pointer;
-		typedef	tree<Key, value_compare, Alloc>				tree;
-		typedef typename tree::iterator						iterator;
-		typedef typename tree::const_iterator				const_iterator;
-		typedef typename tree::reverse_iterator				reverse_iterator;
-		typedef typename tree::const_reverse_iterator		const_reverse_iterator;
+		typedef	tree<key_type, value_type,
+				value_compare, value_pair, const_pair>					rbtree;
+		typedef typename rbtree::iterator					iterator;
+		typedef typename rbtree::const_iterator				const_iterator;
+		typedef typename rbtree::reverse_iterator			reverse_iterator;
+		typedef typename rbtree::const_reverse_iterator		const_reverse_iterator;
 
 		
 	public:
@@ -71,7 +74,7 @@ class map
 		
 	public:			//Private after testing
 		allocator_type	alloc;
-		tree			base_;
+		rbtree			base_;
 		
 	public:
 
@@ -89,7 +92,7 @@ class map
 		}
 		
 		map (const map& x) {
-			for (map::iterator it = x.begin(); it != x.end(); ++it)
+			for (map::const_iterator it = x.begin(); it != x.end(); ++it)
 				insert(*it);
 		}
 
@@ -99,7 +102,7 @@ class map
 			if (x == *this)
 				return *this;
 			base_.clear();
-			for (map::iterator it = x.begin(); it != x.end(); ++it)
+			for (map::const_iterator it = x.begin(); it != x.end(); ++it)
 				insert(*it);
 			return *this;
 		}
@@ -158,7 +161,7 @@ class map
 		
 		void					swap (map& x) {
 			Compare	temp_c = x.comp;
-			tree	temp_t = x.base_;
+			rbtree	temp_t = x.base_;
 
 			x.comp = comp;
 			x.base_ = base_;
@@ -188,8 +191,8 @@ class map
 		iterator				upper_bound (const key_type& k) { return base_.upper_bound(k); }
 		const_iterator			upper_bound (const key_type& k) const { return base_.upper_bound(k); }
 
-		pair<iterator,iterator>				equal_range (const key_type& k) { return base_.equal_range(k); }
-		pair<const_iterator,const_iterator>	equal_range (const key_type& k) const { return base_.equal_range(k); }
+		ft::pair<iterator,iterator>				equal_range (const key_type& k) { return base_.equal_range(k); }
+		ft::pair<const_iterator,const_iterator>	equal_range (const key_type& k) const { return base_.equal_range(k); }
 
 
 		//																			Allocator
