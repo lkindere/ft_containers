@@ -6,16 +6,16 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/10 01:49:44 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/14 18:14:42 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/15 12:17:02 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
+#include <memory>
+
 #include "RBTree.hpp"
 #include "../Integral.hpp"
-
-#include <set>
 
 namespace	ft {
 
@@ -42,7 +42,7 @@ class set
 		typedef typename rbtree::const_reverse_iterator	reverse_iterator;
 		typedef typename rbtree::const_reverse_iterator	const_reverse_iterator;
 	
-	public:			//Private after testing
+	private:
 		key_compare		comp;
 		allocator_type	alloc;
 		rbtree			base_;
@@ -65,7 +65,7 @@ class set
 				insert(*it);
 		}
 
-		// ~set() {}
+		~set() {}
 
 		set& operator= (const set& x) {
 			base_.clear();
@@ -124,20 +124,16 @@ class set
 		}
 
 		void swap (set& x){
+			base_.swap(x.base_);
 			Compare	temp_c = x.comp;
-			rbtree	temp_t = x.base_;
-
 			x.comp = comp;
-			x.base_ = base_;
-
 			comp = temp_c;
-			base_ = temp_t;
 		}
 
 		void			clear() { base_.clear(); }
 
-
 		//																	Observers
+
 
 		key_compare		key_comp() const { return comp; }
 		value_compare	value_comp() const { return comp; }
@@ -151,11 +147,10 @@ class set
 		iterator		upper_bound (const value_type& val) const { return base_.upper_bound(val); }
 		ft::pair<iterator,iterator>		equal_range (const value_type& val) const { return base_.equal_range(val); }
 		
-
 		//																	Allocator
 
-		allocator_type get_allocator() const { allocator_type alloc; return alloc; }		// Probably not even close
 
+		allocator_type get_allocator() const { allocator_type alloc; return alloc; }
 
 		//																	Comparisons
 
@@ -189,9 +184,4 @@ class set
 
 };
 
-
-
-
-
-	
 }

@@ -6,15 +6,13 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 13:48:39 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/03 16:19:55 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/15 12:17:19 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 namespace ft {
-
-
 
 //																		Traits
 

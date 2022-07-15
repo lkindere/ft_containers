@@ -6,16 +6,16 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 12:37:52 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/14 17:59:53 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/15 12:18:47 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include <iostream>
-#include "VectorIterator.hpp"
-#include "Integral.hpp"
 #include <memory>
+
+#include "Integral.hpp"
+#include "VectorIterator.hpp"
 
 namespace ft {
 template <typename T, typename Alloc = std::allocator<T> >

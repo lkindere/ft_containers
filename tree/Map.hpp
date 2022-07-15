@@ -6,23 +6,18 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 01:01:44 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/14 17:53:26 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/15 12:15:48 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include "RBTree.hpp"
-
-#include <utility>
-#include "../Pair.hpp"
 #include <memory>
 #include <functional>
-#include <map>
+
+#include "RBTree.hpp"
+#include "../Pair.hpp"
 #include "../Integral.hpp"
-
-
-#include <iostream>
 
 namespace ft {
 
@@ -33,8 +28,6 @@ class map
 		typedef Key											key_type;
 		typedef T											mapped_type;
 		typedef pair<key_type, mapped_type>					value_type;
-		typedef	pair<const key_type, mapped_type>			value_pair;
-		typedef	const pair<const key_type, mapped_type>		const_pair;
 		typedef Compare										key_compare;
 		typedef Alloc										allocator_type;
 		typedef typename allocator_type::reference			reference;
@@ -44,7 +37,7 @@ class map
 		typedef typename allocator_type::difference_type	difference_type;
 		typedef typename allocator_type::size_type			size_type;
 
-	public:
+	private:
 		class value_compare
 		{
 			public:
@@ -57,22 +50,26 @@ class map
 				bool operator()	(const key_type& k1, const key_type& k2) const { return comp(k1, k2); }
 		};
 		
+	private:
+		typedef	pair<const key_type, mapped_type>			value_pair;
+		typedef	const pair<const key_type, mapped_type>		const_pair;
+		
 	public:
 		typedef	std::allocator<node<value_type> >			node_allocator;
 		typedef	typename node_allocator::pointer			node_pointer;
 		typedef	tree<key_type, value_type,
-				value_compare, value_pair, const_pair>					rbtree;
+				value_compare, value_pair, const_pair>		rbtree;
 		typedef typename rbtree::iterator					iterator;
 		typedef typename rbtree::const_iterator				const_iterator;
 		typedef typename rbtree::reverse_iterator			reverse_iterator;
 		typedef typename rbtree::const_reverse_iterator		const_reverse_iterator;
 
 		
-	public:
+	private:
 		key_compare		comp;
 		value_compare	vcomp;
 		
-	public:			//Private after testing
+	private:			//Private after testing
 		allocator_type	alloc;
 		rbtree			base_;
 		
@@ -96,7 +93,7 @@ class map
 				insert(*it);
 		}
 
-		// ~map() {}
+		~map() {}
 	
 		map&			operator= (const map& x) {
 			if (x == *this)
@@ -160,25 +157,19 @@ class map
 		}
 		
 		void					swap (map& x) {
+			base_.swap(x.base_);
 			Compare	temp_c = x.comp;
-			rbtree	temp_t = x.base_;
-
 			x.comp = comp;
-			x.base_ = base_;
-
 			comp = temp_c;
-			base_ = temp_t;
 		}
 
 		void					clear()  { base_.clear(); }
-
 
 		//																			Observers
 
 		key_compare				key_comp() const { return comp; }
 		value_compare			value_comp() const { return vcomp; }
 
-		
 		//																			Operations
 
 		iterator				find (const key_type& k) { return base_.find(k); }
@@ -200,7 +191,7 @@ class map
 		allocator_type get_allocator() const { return alloc; }
 
 
-		//																	Comparisons
+		//																			Comparisons
 
 		friend bool operator== (const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs){
 				if (lhs.size() != rhs.size())

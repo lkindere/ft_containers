@@ -6,15 +6,11 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 23:29:33 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/14 17:50:23 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/15 12:17:23 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
-
-#include <iostream>
-
-#include "../Iterator.hpp"
 
 enum	e_end {none = 0, is_end, is_rend};
 
@@ -22,9 +18,16 @@ template <typename T, typename N, typename Compare>
 class TreeIterator
 {		
 	public:
-		typedef	T											value_type;
-		typedef	N											node_pointer;										
-   		typedef typename std::bidirectional_iterator_tag	iterator_category;
+		typedef	T		value_type;
+		typedef	N		node_pointer;
+
+	public:
+		typedef typename std::allocator<value_type>::pointer			pointer;
+		typedef typename std::allocator<value_type>::reference			reference;
+		typedef typename std::allocator<value_type>::const_pointer		const_pointer;
+		typedef typename std::allocator<value_type>::const_reference	const_reference;
+		typedef	typename std::allocator<value_type>::difference_type	difference_type;
+		typedef typename std::bidirectional_iterator_tag				iterator_category;
 		
 	private:
 		Compare			comp;
@@ -46,12 +49,11 @@ class TreeIterator
 		bool							operator==(const TreeIterator& iter) const {
 			return ((end_ && end_ == iter.end_) || (end_ == 0 && iter.end() == 0 && ptr_ == iter.base()));
 		}
+		
 		bool							operator!=(const TreeIterator& iter) const { return (!operator==(iter)); }
 		
 		value_type&						operator*()	const { return (ptr_->data); }
-		// value_type&						operator*()	{ return (ptr_->data); }
 		value_type*						operator->() const { return &ptr_->data; }
-		// value_type*						operator->() { return &ptr_->data; }
 
 		TreeIterator&			operator++() {
 			node_pointer	ptr = ptr_;
@@ -167,11 +169,18 @@ template <typename T, typename N, typename Compare>
 class ConstTreeIterator
 {		
 	public:
-		typedef	T											value_type;
-		typedef const T										const_value;
-		typedef	N											node_pointer;										
-   		typedef typename std::bidirectional_iterator_tag	iterator_category;
-		
+		typedef	T			value_type;
+		typedef const T		const_value;
+		typedef	N			node_pointer;										
+	
+	public:
+		typedef typename std::allocator<value_type>::pointer			pointer;
+		typedef typename std::allocator<value_type>::reference			reference;
+		typedef typename std::allocator<value_type>::const_pointer		const_pointer;
+		typedef typename std::allocator<value_type>::const_reference	const_reference;
+		typedef	typename std::allocator<value_type>::difference_type	difference_type;
+		typedef typename std::bidirectional_iterator_tag				iterator_category;
+
 	private:
 		Compare			comp;
 		node_pointer	ptr_;
@@ -311,9 +320,16 @@ template <typename _iter>
 class TreeRevIterator
 {		
 	public:
-		typedef	typename _iter::value_type					value_type;
-		typedef	typename _iter::node_pointer				node_pointer;										
-   		typedef typename std::bidirectional_iterator_tag	iterator_category;
+		typedef	typename _iter::value_type			value_type;
+		typedef	typename _iter::node_pointer		node_pointer;										
+
+	public:
+		typedef typename _iter::pointer				pointer;
+		typedef typename _iter::reference			reference;
+		typedef typename _iter::const_pointer		const_pointer;
+		typedef typename _iter::const_reference		const_reference;
+		typedef	typename _iter::difference_type		difference_type;
+		typedef typename _iter::iterator_category	iterator_category;
 		
 	private:
 		_iter	current;
