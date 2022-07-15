@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 01:01:44 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/15 12:15:48 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/15 15:35:28 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 #include <memory>
 #include <functional>
 
-#include "RBTree.hpp"
-#include "../Pair.hpp"
-#include "../Integral.hpp"
+#include "utils/RBTree.hpp"
+#include "utils/Pair.hpp"
+#include "utils/Integral.hpp"
 
 namespace ft {
 

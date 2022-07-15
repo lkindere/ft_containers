@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 12:37:52 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/15 12:18:47 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/15 15:38:39 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 #include <memory>
 
-#include "Integral.hpp"
-#include "VectorIterator.hpp"
+#include "utils/Integral.hpp"
+#include "utils/VectorIterator.hpp"
 
 namespace ft {
 template <typename T, typename Alloc = std::allocator<T> >
@@ -66,6 +66,8 @@ class vector
 		}
 
 		vector&	operator= (const vector& x) {
+			if (x == *this)
+				return *this;
 			for (;size_ > 0; --size_)
 				alloc_.destroy(&data_[size_ - 1]);
 			if (capacity_ < x.size_){

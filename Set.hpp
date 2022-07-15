@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/10 01:49:44 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/15 12:17:02 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/15 15:38:19 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 #include <memory>
 
-#include "RBTree.hpp"
-#include "../Integral.hpp"
+#include "utils/RBTree.hpp"
+#include "utils/Integral.hpp"
 
 namespace	ft {
 
@@ -68,6 +68,8 @@ class set
 		~set() {}
 
 		set& operator= (const set& x) {
+			if (x == *this)
+				return *this;
 			base_.clear();
 			comp = x.comp;
 			for (set::iterator it = x.begin(); it != x.end(); ++it)

@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 13:10:02 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/15 15:10:53 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/15 15:34:50 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <iostream>
 #include <map>
 
-#include "../tree/Map.hpp"
+#include "../Map.hpp"
 
 #define	RUNS 1000000
 

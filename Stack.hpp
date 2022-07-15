@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 00:30:33 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/04 03:57:51 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/15 15:34:28 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include "Vector.hpp"
 
 namespace ft {
-
 
 template <typename T, class Ctn = ft::vector<T> >
 class stack

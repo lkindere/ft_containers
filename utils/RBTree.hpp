@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 23:12:27 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/15 13:04:37 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/15 15:35:17 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 #include <memory>
 
-#include "../Pair.hpp"
+#include "Pair.hpp"
 #include "TreeIterator.hpp"
 
 enum e_color {red, black};

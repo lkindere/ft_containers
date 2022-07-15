@@ -6,7 +6,7 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 15:11:58 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/15 15:16:56 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/15 15:34:53 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <iostream>
 #include <set>
 
-#include "../tree/Set.hpp"
+#include "../Set.hpp"
 
 #define	RUNS 1000000
 
