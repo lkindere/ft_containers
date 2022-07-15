@@ -6,14 +6,16 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 03:22:02 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/04 06:58:33 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/15 15:11:20 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../Stack.hpp"
+#include <sys/time.h>
+#include <iostream>
 #include <stack>
 #include <vector>
-#include <sys/time.h>
+
+#include "../Stack.hpp"
 
 #define	RUNS 1000000
 
@@ -153,5 +155,7 @@ int	main(void)
 	while (!fstack.empty())
 		hstack.pop();
 	std::cout <<  get_time() - start << "ms" << std::endl;
+
+	system("leaks a.out");
 	return 0;
 }

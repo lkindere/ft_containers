@@ -6,13 +6,16 @@
 /*   By: lkindere <lkindere@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:04:17 by lkindere          #+#    #+#             */
-/*   Updated: 2022/07/05 10:13:36 by lkindere         ###   ########.fr       */
+/*   Updated: 2022/07/15 15:11:24 by lkindere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../Vector.hpp"
-#include <vector>
 #include <sys/time.h>
+#include <iostream>
+#include <vector>
+
+#include "../Vector.hpp"
+
 
 #define	RUNS 1000000
 
@@ -178,5 +181,27 @@ int	main(void)
 	}
 	status(rip);
 
+	std::cout << "\nTIMER\n";
+	double	start;
+	
+	std::cout << "FT:  ";
+
+	start = get_time();
+	for (size_t i = 0; i < RUNS * 5; ++i)
+		fvec.push_back(1);
+	while (!fvec.empty())
+		fvec.pop_back();
+	std::cout <<  get_time() - start << "ms" << std::endl;
+
+	std::cout << "STD: ";
+	
+	start = get_time();
+	for (size_t i = 0; i < RUNS * 5; ++i)
+		svec.push_back(1);
+	while (!fvec.empty())
+		svec.pop_back();
+	std::cout <<  get_time() - start << "ms" << std::endl;
+
+	system("leaks a.out");
 	return 0;
 }
